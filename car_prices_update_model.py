@@ -531,17 +531,22 @@ clf = MLPRegressor(solver='adam', alpha=0.01,
                     learning_rate = 'adaptive', warm_start=True,
                     validation_fraction = 0.1, early_stopping = True)
 
-clf.fit(X_train_final, y_train.values)
+# clf.fit(X_train_final, y_train.values)
 
-test_result(clf, 300)
+# test_result(clf, 300)
 
 to_predict = to_predict[all_columns]
+for i in to_predict:
+  print(i)
+
+for n in X_train.columns:
+  print(n)
 
 prediction_test = full_pipeline.transform(to_predict)
 
-prediction_result = clf.predict(prediction_test)
-print("\n\n", prediction_test)
-print("\n\n", prediction_result)
+# prediction_result = clf.predict(prediction_test)
+# print("\n\n", prediction_test)
+# print("\n\n", prediction_result)
 
 
 # class CustomCallbacs():
@@ -574,8 +579,8 @@ print("\n\n", prediction_result)
 
 
 # saving model
-joblib.dump(clf, "final_model_v1.gz")
+# joblib.dump(clf, "final_model_v1.gz")
 
 # saving scaler
-joblib.dump(full_pipeline, "final_transofrmator_v1.gz")
+# joblib.dump(full_pipeline, "final_transofrmator_v1.gz")
 

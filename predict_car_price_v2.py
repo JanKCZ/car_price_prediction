@@ -3,28 +3,22 @@ import numpy as np
 import joblib
 
 def load_model():
-	# model_path = '/Users/jankolnik/Desktop/ML_projects/project_car_prices/final_model_v1.gz'
 	model_path = 'final_model_v1.gz'
 	return joblib.load(model_path)
 
 def load_transormator():
-	# transformator_path = '/Users/jankolnik/Desktop/ML_projects/project_car_prices/final_transofrmator_v1.gz'
 	transformator_path = 'final_transofrmator_v1.gz'
 	return joblib.load(transformator_path)
 
 def make_test_prediction(int_features):
 	model = load_model()
 	transformator = load_transormator()
-
-	print(int_features)
-
-	# car_brand, car_model, car_type, engine_power, ccm, condition, service_book, year, milage, fuell, n_ppl, n_airbags, n_doors, 
-	# 		aircondition, transmission, country, extras
 	
 	#CREATE DATAFRAME
 	cat_columns = ['fuell','transmission', 'car_model', 'car_brand', 'country_from', 'car_type']
-	num_columns = ['engine_power', 'drs_ppl', 'y_m', 'year', 'milage', 'service_book', 'condition', 'airbags', 'air_condition', 'n_doors', 'n_people', 'extra_category', 'car_category']
-	all_columns = cat_columns + num_columns
+	num_columns = ['engine_power', 'drs_ppl', 'y_m', 'year', 'milage', 'service_book', 'condition', 'airbags', 'air_condition', 'n_doors', 'n_people', 'car_category', 'extra_category']
+	all_columns = ["engine_power", "drs_ppl", "y_m", "year", "milage", "service_book", "condition", "airbags", "air_condition", "n_doors", "n_people", "car_category", "extra_category", "fuell", 'transmission', 'car_model', 'car_brand', 'country_from', 'car_type']
+
 	to_predict = pd.DataFrame(columns = all_columns)
 	
 	to_predict.loc[0, "car_brand"] = int_features[0]
