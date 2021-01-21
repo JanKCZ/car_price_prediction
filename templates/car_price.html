@@ -9,22 +9,24 @@
     <script type="text/javascript"
          src="{{ url_for('static', filename='methods.js') }}">
     </script>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
 </head>
 <body>
 	<header>
 		<h1>
 			Predikce cen automobilů
 		</h1>
-		<h3>
-			S využitím neuronových sítí je umožněno odhadnout cenu automobilu
-		</h3>
+		<h4>
+			Neuronová síť naučená z více jak 40 tisíc inzerátů automobilů na internetu.
+			Umožňuje odhadnout cenu automobilu s průměrnou odchylkou pod 10%.
+		</h4>
 	</header>
 	<main>
 		<form>
 			<table>
 				<tr>
 					<td>
-						Výrobce automobilu : 
+						Výrobce: 
 					</td>
 					<td>
 						<select
@@ -35,7 +37,7 @@
 				</tr>
 				<tr>
 					<td>
-						Model automobilu: 
+						Model: 
 					</td>
 					<td>
 						<select 
@@ -45,7 +47,7 @@
 				</tr>
 				<tr>
 					<td>
-						Karoserie automobilu: 
+						Karoserie: 
 					</td>
 					<td>
 						<select 
@@ -56,7 +58,7 @@
 				</tr>
 				<tr>
 					<td>
-						Výkon vozidla v kW:
+						Výkon v kW:
 					</td>
 					<td>
 						<input type="text" id="engine_power" name="engine_power" required minlength="1" maxlength="3" placeholder="například 90" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
@@ -64,15 +66,7 @@
 				</tr>
 				<tr>
 					<td>
-						Obsah motoru v ccm:
-					</td>
-					<td>
-						<input type="text" id="ccm" name="ccm" required minlength="1" maxlength="4" placeholder="například 1900" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Stav vozidla: 
+						Stav: 
 					</td>
 					<td>
 						<select
@@ -99,7 +93,7 @@
 				</tr>
 				<tr>
 					<td>
-						Rok výroby vozidla (min 2010):
+						Rok výroby (min 2010):
 					</td>
 					<td>
 						<input type="text" id="year" name="year" required minlength="4" maxlength="4" placeholder="například 2015" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
@@ -129,10 +123,7 @@
 						Počet míst k sezení: 
 					</td>
 					<td>
-						<select 
-							id="n_ppl_list">
-							<option disabled selected value > -- vyberte jednu z možností -- </option>
-						</select>
+						<input type="text" id="n_ppl_list" name="n_ppl_list" required minlength="1" maxlength="1" placeholder="například 5" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
 					</td>
 				</tr>
 				<tr>
@@ -140,10 +131,7 @@
 						Počet airbagů: 
 					</td>
 					<td>
-						<select 
-							id="n_airbags_list">
-							<option disabled selected value > -- vyberte jednu z možností -- </option>
-						</select>
+						<input type="text" id="n_airbags_list" name="n_airbags_list" required minlength="1" maxlength="2" placeholder="například 12" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
 					</td>
 				</tr>
 				<tr>
@@ -151,10 +139,7 @@
 						Počet dveří: 
 					</td>
 					<td>
-						<select 
-							id="n_doors_list">
-							<option disabled selected value > -- vyberte jednu z možností -- </option>
-						</select>
+						<input type="text" id="n_doors_list" name="n_doors_list" required minlength="1" maxlength="1" placeholder="například 5" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
 					</td>
 				</tr>
 				<tr>
@@ -198,40 +183,24 @@
 						<select 
 							id="extras_list">
 							<option disabled selected value > -- vyberte jednu z možností -- </option>
-							<option value="1">"1 - 14 extras"</option>
-							<option value="2">"15 - 29 extras"</option>
-							<option value="3">"30 - 44 extras"</option>
-							<option value="4">"45 - 59 extras"</option>
-							<option value="5">"60 - 74 extras"</option>
-							<option value="6">"75 - 89 extras"</option>
-							<option value="7">"90 - 104 extras"</option>
-							<option value="8">"105 - 119 extras"</option>
-							<option value="9">"120 - 134 extras"</option>
-							<option value="10">"135 and more extras"</option>
+							<option value="1">Minimální</option>
+							<option value="2">Standardní</option>
+							<option value="3">Prémiová</option>
+							<option value="4">Exkluzivní</option>
 					</td>
 				</tr>
 				<tr>
-					<td>----------</td>
-				</tr>
-				<tr>
-					<td>
-						Odhadovaná cena vozidla je:
-					</td>
-					<td>
-						<div id="predicted_price"></div>
-					</td>
+					<td>--------------------------------------------</td>
 				</tr>
 			</table>
 		</form>
 	</main>
 	<div class="login">
     <form action="{{ url_for('predict')}}"method="POST">
-    	<!-- <input id = "param" type = "hidden" name = "param" value = "" /> -->
     	<input id = "car_brand_input" type = "hidden" name = "car_brand_input" value = "" />
     	<input id = "car_model_input" type = "hidden" name = "car_model_input" value = "" />
     	<input id = "car_type_input" type = "hidden" name = "car_type_input" value = "" />
     	<input id = "engine_power_input" type = "hidden" name = "engine_power_input" value = "" />
-    	<input id = "ccm_input" type = "hidden" name = "ccm_input" value = "" />
     	<input id = "condition_input" type = "hidden" name = "condition_input" value = "" />
     	<input id = "service_book_input" type = "hidden" name = "service_book_input" value = "" />
     	<input id = "year_input" type = "hidden" name = "year_input" value = "" />
@@ -244,12 +213,15 @@
     	<input id = "transmission_input" type = "hidden" name = "transmission_input" value = "" />
     	<input id = "country_input" type = "hidden" name = "country_input" value = "" />
     	<input id = "extras_input" type = "hidden" name = "extras_input" value = "" />
-        <button type="submit"
+        <button type="submit" name="submit" id="submitBtn"
         	onclick = "passParametres()"
-        	class="btn btn-primary btn-block btn-large">Predict</button>
+        	class="btn">Odhadnout cenu</button>
     </form>
 	</div>
-	{{pred}}
+		<h3>
+			{{pred}}
+		</h3>
+
 </body>
 	<script>
 		//VARIABLES
@@ -305,27 +277,18 @@
 		}
 
 		//FUEL
-		load_data_to_list("car_fuel_list", fuell_data, true);
+		load_data_to_list("car_fuel_list", fuell_data, false);
 
 		//TRANSMISSION
 		load_data_to_list("transmission_list", transmission_data, true);
 
 		//AIRCONDITION
-		load_data_to_list("air_condition_list", air_condition_data, true);
+		load_data_to_list("air_condition_list", air_condition_data, false);
 
 		//COUNTRY
 		load_data_to_list("country_list", country_data, false);
 
 		//CAR TYPE
 		load_data_to_list("car_type_list", car_type_data, true);
-
-		//DOORS
-		load_data_to_list("n_doors_list", n_doors, true);
-
-		//PPL
-		load_data_to_list("n_ppl_list", n_ppl, true);
-
-		//AIRBAGS
-		load_data_to_list("n_airbags_list", n_airbags, false);
 	</script>
 </html>

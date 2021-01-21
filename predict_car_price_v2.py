@@ -25,19 +25,18 @@ def make_test_prediction(int_features):
 	to_predict.loc[0, "car_model"] = int_features[1]
 	to_predict.loc[0, "car_type"] = int_features[2]
 	to_predict.loc[0, "engine_power"] = int_features[3]
-	to_predict.loc[0, "ccm"] = int_features[4]
-	to_predict.loc[0, "condition"] = int_features[5]
-	to_predict.loc[0, "service_book"] = int_features[6]
-	to_predict.loc[0, "year"] = int_features[7]
-	to_predict.loc[0, "milage"] = int_features[8]
-	to_predict.loc[0, "fuell"] = int_features[9]
-	to_predict.loc[0, "n_people"] = int_features[10]
-	to_predict.loc[0, "airbags"] = int_features[11]
-	to_predict.loc[0, "n_doors"] = int_features[12]
-	to_predict.loc[0, "air_condition"] = int_features[13]
-	to_predict.loc[0, "transmission"] = int_features[14]
-	to_predict.loc[0, "country_from"] = int_features[15]
-	to_predict.loc[0, "extra_category"] = int_features[16]
+	to_predict.loc[0, "condition"] = int_features[4]
+	to_predict.loc[0, "service_book"] = int_features[5]
+	to_predict.loc[0, "year"] = int_features[6]
+	to_predict.loc[0, "milage"] = int_features[7]
+	to_predict.loc[0, "fuell"] = int_features[8]
+	to_predict.loc[0, "n_people"] = int_features[9]
+	to_predict.loc[0, "airbags"] = int_features[10]
+	to_predict.loc[0, "n_doors"] = int_features[11]
+	to_predict.loc[0, "air_condition"] = int_features[12]
+	to_predict.loc[0, "transmission"] = int_features[13]
+	to_predict.loc[0, "country_from"] = int_features[14]
+	to_predict.loc[0, "extra_category"] = int_features[15]
 	
 	
 	#CAR BRAND CATEGORY
@@ -77,7 +76,6 @@ def make_test_prediction(int_features):
 	to_predict[num_columns] = to_predict[num_columns].astype(np.float32)
 	
 	#adding car category depending on brand
-	to_predict["ccm"] = to_predict["ccm"].astype(np.float32)
 	for index, row in to_predict.iterrows():
 	    if row.car_brand in luxury_brand:
 	        to_predict.loc[index,'car_category'] = 2

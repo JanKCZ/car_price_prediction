@@ -1,7 +1,3 @@
-function passParametres_2() {
-		document.getElementById("param").value = "Škoda!!!!!"
-	}
-
 function passParametres() {
 	var param_list = []
 
@@ -39,27 +35,20 @@ function passParametres() {
 	document.getElementById("engine_power_input").value = engine_power
 	param_list.push(engine_power)
 
-	var ccm = document.getElementById("ccm").value
-	document.getElementById("ccm_input").value = ccm
-	param_list.push(ccm)
-
 	var fuel_list = document.getElementById("car_fuel_list")
 	var fuel = fuel_list.options[fuel_list.selectedIndex].text
 	document.getElementById("fuell_input").value = fuel
 	param_list.push(fuel)
 
-	var n_ppl_list = document.getElementById("n_ppl_list")
-	var n_ppl = n_ppl_list.options[n_ppl_list.selectedIndex].text
+	var n_ppl = document.getElementById("n_ppl_list").value
 	document.getElementById("n_ppl_input").value = n_ppl
 	param_list.push(n_ppl)
 
-	var airbags_list = document.getElementById("n_airbags_list")
-	var airbags = airbags_list.options[airbags_list.selectedIndex].text
+	var airbags = document.getElementById("n_airbags_list").value
 	document.getElementById("n_airbags_input").value = airbags
 	param_list.push(airbags)
 
-	var doors_list = document.getElementById("n_doors_list")
-	var doors = doors_list.options[doors_list.selectedIndex].text
+	var doors = document.getElementById("n_doors_list").value
 	document.getElementById("n_doors_input").value = doors
 	param_list.push(doors)
 
@@ -81,7 +70,9 @@ function passParametres() {
 	var extras_list = document.getElementById("extras_list")
 	var extras = extras_list.options[extras_list.selectedIndex].value
 	document.getElementById("extras_input").value = extras
-	param_list.push(country)
+	param_list.push(extras)
+
+	console.log(param_list)
 
 	if (param_list.includes("-- vyberte jednu z možností --") == true) {
 		alert("vyplňte všechny údaje")
@@ -93,8 +84,7 @@ function passParametres() {
 		alert("brand: " + car_brand + "\n" +
 			"model: " + car_model + "\n" +
 			"type: " + type + "\n" +
-			"engine_power: " + type + "\n" +
-			"ccm: " + type + "\n" +
+			"engine_power: " + engine_power + "\n" +
 			"condition: " + condition + "\n" +
 			"book: " + book + "\n" +
 			"year: " + year + "\n" +

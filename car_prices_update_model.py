@@ -201,31 +201,20 @@ print("dropping older cars than: ", drop_year)
 data_older_cars = data_frame_training_ready[lambda data: data.year < drop_year].index
 data_frame_training_ready = data_frame_training_ready.drop(data_older_cars)
 
-print("reducing extras to 10 categories")
+print("reducing extras to 4 categories")
 if reduce_extras:
         for index, row in tqdm(data_frame_training_ready.iterrows()):
             total_extras = row[extra_columns_random].sum()
             
-            if 0 <= total_extras <= 14:
-                data_frame_training_ready.loc[index,'extra_category'] = 10
-            if 15 <= total_extras <= 29:
-                data_frame_training_ready.loc[index,'extra_category'] = 9
-            if 30 <= total_extras <= 44:
-                data_frame_training_ready.loc[index,'extra_category'] = 8
-            if 45 <= total_extras <= 59:
-                data_frame_training_ready.loc[index,'extra_category'] = 7
-            if 60 <= total_extras <= 74:
-                data_frame_training_ready.loc[index,'extra_category'] = 6
-            if 75 <= total_extras <= 89:
-                data_frame_training_ready.loc[index,'extra_category'] = 5
-            if 90 <= total_extras <= 104:
-                data_frame_training_ready.loc[index,'extra_category'] = 4
-            if 105 <= total_extras >= 119:
-                data_frame_training_ready.loc[index,'extra_category'] = 3
-            if 120 <= total_extras >= 134:
-                data_frame_training_ready.loc[index,'extra_category'] = 2
-            if total_extras >= 135:
+            if 0 <= total_extras <= 35:
                 data_frame_training_ready.loc[index,'extra_category'] = 1
+            if 36 <= total_extras <= 70:
+                data_frame_training_ready.loc[index,'extra_category'] = 2
+            if 71 <= total_extras <= 105:
+                data_frame_training_ready.loc[index,'extra_category'] = 3
+            if total_extras >= 106:
+                data_frame_training_ready.loc[index,'extra_category'] = 4
+
 
 print("adding car_category to each row")
 luxury_brand = ['Jaguar','Mercedes-Benz','BMW',  'Audi', 'Volvo', 'Subaru','Porsche',
@@ -285,6 +274,12 @@ if use_ordinal:
         data_frame_training_ready.condition = data_frame_training_ready.condition.replace(['nové'], 2)
         data_frame_training_ready.condition = data_frame_training_ready.condition.replace(['předváděcí'], 1)
         data_frame_training_ready.condition = data_frame_training_ready.condition.replace(['ojeté'], 0)
+
+
+
+data_frame_training_ready.transmission = data_frame_training_ready.transmission.replace(['manuální (6 stupňová)', 'manuální (5 stupňová)', 'manuální (8 stupňová a více)', 'manuální (7 stupňová)', 'manuální (4 stupňová)', 'manuální (3 stupňová a méně)'], 'manuální')
+data_frame_training_ready.transmission = data_frame_training_ready.transmission.replace(['poloautomatická (8 stupňová a více)', 'poloautomatická (5 stupňová)', 'poloautomatická', 'poloautomatická (6 stupňová)', 'poloautomatická (7 stupňová)'], 'poloautomatická')
+data_frame_training_ready.transmission = data_frame_training_ready.transmission.replace(['automatická (6 stupňová)', 'automatická (8 stupňová a více)','automatická (7 stupňová)', 'automatická (4 stupňová)', 'automatická (5 stupňová)', 'automatická (3 stupňová a méně)'], 'automatická')
 
 
 cat_columns = ['fuell','transmission','car_type', 'car_model', 'condition', 'country_from', 'air_condition', 'service_book', 'car_brand']
@@ -361,14 +356,13 @@ full_pipeline = ColumnTransformer([
 #-------------START
 #-------------
 class InputData:
-  def __init__(self, car_brand, car_model, car_type, engine_power, ccm, condition, service_book, year, milage, fuell, n_ppl, n_airbags, n_doors, 
+  def __init__(self, car_brand, car_model, car_type, engine_power, condition, service_book, year, milage, fuell, n_ppl, n_airbags, n_doors, 
     aircondition, transmission, country, extras):
 
     self.car_brand = car_brand
     self.car_model = car_model
     self.car_type = car_type
     self.engine_power = engine_power
-    self.ccm = ccm
     self.condition = condition
     self.service_book = service_book
     self.year = year
@@ -383,7 +377,7 @@ class InputData:
     self.extras = extras
 
 #TEST SAMPLE:
-test_car = InputData("Škoda", "Octavia", "hatchback", "110", 1968, "ojeté", "ano", "2017", "90000", "nafta", "5", "5", "8",
+test_car = InputData("Škoda", "Octavia", "hatchback", "110", "ojeté", "ano", "2017", "90000", "nafta", "5", "5", "8",
   "manuální", "automatická (7 stupňová)", "Česká republika", "6")
 
 #CREATE DATAFRAME
@@ -397,7 +391,6 @@ to_predict.loc[0, "car_model"] = test_car.car_model
 to_predict.loc[0, "car_type"] = test_car.car_type
 to_predict.loc[0, "condition"] = test_car.condition
 to_predict.loc[0, "engine_power"] = test_car.engine_power
-to_predict.loc[0, "ccm"] = test_car.ccm
 to_predict.loc[0, "service_book"] = test_car.service_book
 to_predict.loc[0, "year"] = test_car.year
 to_predict.loc[0, "milage"] = test_car.milage
@@ -447,7 +440,6 @@ to_predict.condition = to_predict.condition.replace(['ojeté'], 0)
 to_predict[num_columns_2] = to_predict[num_columns_2].astype(np.float32)
 
 #adding car category depending on brand
-to_predict["ccm"] = to_predict["ccm"].astype(np.float32)
 for index, row in tqdm(to_predict.iterrows()):
     if row.car_brand in luxury_brand:
         to_predict.loc[index,'car_category'] = 2
@@ -531,23 +523,9 @@ clf = MLPRegressor(solver='adam', alpha=0.01,
                     learning_rate = 'adaptive', warm_start=True,
                     validation_fraction = 0.1, early_stopping = True)
 
-# clf.fit(X_train_final, y_train.values)
+clf.fit(X_train_final, y_train.values)
 
-# test_result(clf, 300)
-
-to_predict = to_predict[all_columns]
-for i in to_predict:
-  print(i)
-
-for n in X_train.columns:
-  print(n)
-
-prediction_test = full_pipeline.transform(to_predict)
-
-# prediction_result = clf.predict(prediction_test)
-# print("\n\n", prediction_test)
-# print("\n\n", prediction_result)
-
+test_result(clf, 300)
 
 # class CustomCallbacs():
 #   earlyStop = keras.callbacks.EarlyStopping(patience = 5, restore_best_weights = True, monitor='val_loss')
@@ -579,8 +557,8 @@ prediction_test = full_pipeline.transform(to_predict)
 
 
 # saving model
-# joblib.dump(clf, "final_model_v1.gz")
+joblib.dump(clf, "final_model_v1.gz")
 
 # saving scaler
-# joblib.dump(full_pipeline, "final_transofrmator_v1.gz")
+joblib.dump(full_pipeline, "final_transofrmator_v1.gz")
 

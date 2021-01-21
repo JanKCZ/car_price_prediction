@@ -1,35 +1,54 @@
-var fuell_data = ['benzín', 'nafta', 'hybridní', 'LPG + benzín', 'CNG + benzín', 'ethanol', 
-       'elektro', 'jiné'];
+class Input_list:
+	#def ___init__(self):
+	#	self
 
-var transmission_data = ['manuální', "poloautomatická", "automatická"];
+	fuell_data = ['benzín', 'nafta', 'hybridní', 'LPG + benzín', 'CNG + benzín',
+       'elektro', 'jiné', 'ethanol']
 
-var air_condition_data = ['manuální', 'automatická', 'dvouzónová automatická',
+	transmission_data = ['manuální (6 stupňová)', 'manuální (5 stupňová)', 'manuální',
+	       'automatická (6 stupňová)', 'automatická (8 stupňová a více)',
+	       'automatická (7 stupňová)', 'automatická',
+	       'manuální (8 stupňová a více)', 'automatická (4 stupňová)',
+	       'automatická (5 stupňová)', 'automatická (3 stupňová a méně)',
+	       'manuální (7 stupňová)', 'poloautomatická (8 stupňová a více)',
+	       'manuální (4 stupňová)', 'poloautomatická (5 stupňová)',
+	       'poloautomatická', 'poloautomatická (6 stupňová)',
+	       'poloautomatická (7 stupňová)', 'manuální (3 stupňová a méně)']
+	sorted(transmission_data)
+
+	air_condition_data = ['automatická', 'dvouzónová automatická', 'manuální',
 	       'třízónová automatická', 'čtyřzónová automatická',
-	       'bez klimatizace'];
+	       'bez klimatizace']
+	sorted(air_condition_data)
 
-var country_data = ['Česká republika', 'Německo', 'Belgie', 'Švýcarsko',
+	country_data = ['Česká republika', 'Německo', 'Belgie', 'Švýcarsko',
 	       'Itálie', 'Slovenská republika', 'Holandsko', 'Rakousko',
 	       'Francie', 'Lucembursko', 'USA', 'Dánsko', 'Španělsko', 'Jiná',
-	       'Nedohledatelný původ'];
+	       'Nedohledatelný původ']
 
-var car_type_data = ['hatchback', 'sedan/limuzína', 'MPV', 'liftback', 'SUV', 'kombi',
+	car_type_data = ['hatchback', 'sedan/limuzína', 'MPV', 'liftback', 'SUV', 'kombi',
 	       'kupé', 'VAN', 'pick-up', 'kabriolet', 'terénní', 'CUV',
-	       'roadster'];
+	       'roadster']
+	sorted(car_type_data)
 
-var extras_data = [
-					"základní",
-					"standardní",
-					"prémiová",
-					"exkluzivní",
-	];
+	service_book_data = ["ano", "ne"]
 
-var n_doors = [1, 2, 3, 4, 5, 6];
+	condition_data = ['ojeté', 'nové', 'předváděcí']
 
-var n_ppl = [1, 2, 3, 4, 5, 6];
+	extras_data = [
+					"1 - 14 extras",
+					"15 - 29 extras",
+					"30 - 44 extras",
+					"45 - 59 extras",
+					"60 - 74 extras",
+					"75 - 89 extras",
+					"90 - 104 extras",
+					"105 - 119 extras",
+					"120 - 134 extras",
+					"135 and more extras",
+	]
 
-var n_airbags = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
-
-var car_brand_model_dict = {'Abarth': ['595', '500', '695', 'Punto'],
+	car_brand_model_dict = {'Abarth': ['595', '500', '695', 'Punto'],
  'Acura': ['MDX'],
  'Aixam': ['CROSSOVER', 'Minauto', 'GTO', 'CITY', 'CROSSLINE', 'Coupé'],
  'Alfa Romeo': ['159',
@@ -775,10 +794,4 @@ var car_brand_model_dict = {'Abarth': ['595', '500', '695', 'Punto'],
   'Citigo',
   'Kamiq',
   'Felicia',
-  'Favorit']};
-
-
-
-
-
-
+  'Favorit']}
