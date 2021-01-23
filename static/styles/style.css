@@ -2,8 +2,22 @@ body {
   background-color: white;
 }
 
+td {
+  height: 25px;
+  font-size: 17px;
+}
+
+select {
+  height: 25px;
+  font-size: 20px;
+}
+
+#year {
+  width: 143px;
+}
+
 #submitBtn {
-background-color: #4CAF50; /* Green */
+  background-color: #594fdf;
   border: none;
   color: white;
   padding: 15px 32px;
@@ -11,4 +25,59 @@ background-color: #4CAF50; /* Green */
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
+  border-radius: 6px;
+}
+
+#submitBtn:hover{background-color:orange;}
+
+.ttYear {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.ttYear .ttYearText {
+  visibility: hidden;
+  width: 120px;
+  background-color: rgb(96, 177, 243);
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+ 
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.ttYear:hover .ttYearText {
+  visibility: visible;
+}
+
+.ttExtras {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.ttExtras .ttExtrasText {
+  visibility: hidden;
+  width: 200px;
+  background-color: rgb(96, 177, 243);
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+ 
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.ttExtras:hover .ttExtrasText {
+  visibility: visible;
 }
