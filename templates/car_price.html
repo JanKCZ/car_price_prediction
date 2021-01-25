@@ -13,7 +13,7 @@
          src="{{ url_for('static', filename='methods.js') }}">
     </script>
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}"/>
-	<link rel="stylesheet" href="static/styles/style.css"/>
+	<!-- <link rel="stylesheet" href="static/styles/style.css"/> -->
 </head>
 <body>
 	<header>
@@ -21,9 +21,12 @@
 			Predikce cen automobilů
 		</h1>
 		<h4>
-			Neuronová síť naučená z více jak 40 tisíc inzerátů automobilů na internetu.
-			Umožňuje odhadnout cenu automobilu s průměrnou odchylkou pod 10%.
+			Strojové učení, konkrétně neuronová síť (dále jen NS) je zde využita k "vstřebání" informací z více jak 40 tisíc inzerátů automobilů. Výsledkem je model NS, který umožňuje odhadovat cenu utomobilu na základě jakýchkoliv vstupních dat.
+			<div class="ttHeading">?
+				<span class="ttHeadingText">NS nekontroluje, zda-li může mít např. Porsche 911 osm míst a jeden airbag, ale odhadne, jaká by byla jeho hodnota s ohledem na výrobce, model a další parametry vozidla.</span>
+			</div>
 		</h4>
+		<br>
 	</header>
 	<main>
 		<form>
@@ -240,7 +243,7 @@
 		</b>
 		<br>
 		<b1>
-			Strojové učení je učení v pravém slova smyslu, tedy není zde žádná excelová tabulka anebo zdrojový kód, který by zohledňoval každou variantu a každou z milionu kombinací. Algoritmus je schopen se s relativní přeností naučit odhadovat téměř jakékoliv hodnoty, odhalit anomálie, rozpoznat obrázek, anebo například naučit se hrát počítačovou hru. Tento projekt vznikl jako jednoduchá prezentace užitku strojového učení.
+			Strojové učení je učení v pravém slova smyslu, není zde žádný zdrojový kód, který by zohledňoval každou variantu a každou z milionu kombinací. Algoritmus je schopen se s relativní přeností naučit odhadovat téměř jakékoliv hodnoty, odhalit anomálie, rozpoznat obrázek, anebo například naučit se hrát počítačovou hru. Tento projekt vznikl jako jednoduchá prezentace užitku strojového učení.<br>
 		</b1>
 	</div>
 	<br>
@@ -250,8 +253,9 @@
 		</b>
 		<br>
 		<b1>
-			Zdrojovými daty jsou inzeráty automobilů, které jsou vkládány autobazary, anebo lidmi postrádající potřebné znalosti k odhadnutí ceny. Může proto docházet k účelnému anebo nechtěnému pozměnění prodejní ceny, která může reflektovat například "slevu" při využití půjčky, popřípadě očekávaný tlak na slevu ze strany zájemce. Všechny tyto odchylky od tržní ceny jsou alogritmem absorvovány a naučeny.
-
+			Zdrojovými daty jsou inzeráty automobilů, které jsou vkládány autobazary, anebo lidmi postrádající potřebné znalosti k odhadnutí ceny. Může proto docházet k účelnému anebo nechtěnému pozměnění prodejní ceny oproti ceně tržní (jako např. například "sleva" při využití půjčky, popřípadě očekávaný tlak na slevu ze strany zájemce).<br> 1. Všechny tyto odchylky od skutečné tržní ceny jsou alogritmem absorvovány a naučeny.<br>
+			2. Pokud jsou tedy vstupní data nepřesná, nelze ani od neuronové sítě očekávat 100% přesný odhad.<br>
+			3. U automobilů vyrobených před rokem 2010 docházelo k vysoké deformaci odhadované ceny. Po analýze vstupních dat bylo zjištěno, že tyto automobily mají více skrytých vad plynoucích z opotřebení, apod. Z tohoto důvodu nebyly na učení použity inzeráty těchto automobilů.
 		</b1>
 	</div>
 	<br>
@@ -261,7 +265,7 @@
 		</b>
 		<br>
 		<b1>
-			5 skrytých vrstev po 800 neuronech, dropout 0.3, alfa 0.01, batch 32, gradient Adam, activační funkce ReLu, knihovna Scikit-learn MLPRegressor
+			5 skrytých vrstev po 800 neuronech, dropout 0.3, alfa 0.01, batch 32, gradient Adam, activační funkce ReLu, knihovna Scikit-learn MLPRegressor<br>
 			Neuronová síť v tomto případě dosahuje výrazně lepších výsledků než RFR, XGBoost a ostatní regresní metody.
 		</b1>
 	</div>
@@ -275,6 +279,11 @@
 			Odhadovaná cena v žádném případě neslouží jako referenční hodnota vozidla a využití spočítané hotnody vozidla je poouze na vlastní odpovědnost.
 		</b1>
 	</div>
+	<br>
+	<br>
+	<address>
+		Kontakt <a href="mailto:jan.kolnik@gmail.com">jan.kolnik@gmail.com</a>.<br> 
+	</address>
 </body>
 	<script>
 		//VARIABLES

@@ -30,54 +30,98 @@ select {
 
 #submitBtn:hover{background-color:orange;}
 
+/* YEAR tooltip*/
 .ttYear {
   position: relative;
   display: inline-block;
-  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+  border-bottom: 1px dotted black;
 }
 
-/* Tooltip text */
 .ttYear .ttYearText {
   visibility: hidden;
   width: 120px;
-  background-color: rgb(96, 177, 243);
+  background-color: #6183b6;
   color: #fff;
   text-align: center;
   padding: 5px 0;
   border-radius: 6px;
- 
-  /* Position the tooltip text - see examples below! */
   position: absolute;
   z-index: 1;
 }
 
-/* Show the tooltip text when you mouse over the tooltip container */
 .ttYear:hover .ttYearText {
   visibility: visible;
 }
 
+
+/* EXTRAS tooltip*/
 .ttExtras {
   position: relative;
   display: inline-block;
-  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+  border-bottom: 1px dotted black;
 }
 
-/* Tooltip text */
 .ttExtras .ttExtrasText {
   visibility: hidden;
   width: 200px;
-  background-color: rgb(96, 177, 243);
+  background-color: #6183b6;
   color: #fff;
   text-align: center;
   padding: 5px 0;
   border-radius: 6px;
- 
-  /* Position the tooltip text - see examples below! */
+   position: absolute;
+  z-index: 1;
+}
+
+.ttExtras:hover .ttExtrasText {
+  visibility: visible;
+}
+
+
+/* EXTRAS tooltip*/
+.ttExtras {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.ttExtras .ttExtrasText {
+  visibility: hidden;
+  width: 200px;
+  background-color: #6183b6;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
   position: absolute;
   z-index: 1;
 }
 
-/* Show the tooltip text when you mouse over the tooltip container */
 .ttExtras:hover .ttExtrasText {
+  visibility: visible;
+}
+
+
+/* HEADING tooltip*/
+.ttHeading {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.ttHeading .ttHeadingText {
+  visibility: hidden;
+  width: 400px;
+  height: 70px;
+  background-color: #6183b6;
+  color: #fff;
+  text-align: center;
+  padding: 5px 5px;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+}
+
+.ttHeading:hover .ttHeadingText {
   visibility: visible;
 }
