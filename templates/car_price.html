@@ -14,6 +14,9 @@
     </script>
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}"/>
 	<!-- <link rel="stylesheet" href="static/styles/style.css"/> -->
+	<!-- <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> -->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
 </head>
 <body>
 	<header>
@@ -22,7 +25,7 @@
 		</h1>
 		<h4>
 			Strojové učení, konkrétně neuronová síť (dále jen NS) je zde využita k "vstřebání" informací z více jak 40 tisíc inzerátů automobilů. Výsledkem je model NS, který umožňuje odhadovat cenu utomobilu na základě jakýchkoliv vstupních dat.
-			<div class="ttHeading">?
+			<div class="ttHeading"><i class="material-icons" style="font-size:20px; vertical-align: -5px;">info</i>
 				<span class="ttHeadingText">NS nekontroluje, zda-li může mít např. Porsche 911 osm míst a jeden airbag, ale odhadne, jaká by byla jeho hodnota s ohledem na výrobce, model a další parametry vozidla.</span>
 			</div>
 		</h4>
@@ -38,7 +41,7 @@
 					<td>
 						<select
 							id="car_brand_list">
-							<option value="" disabled selected> -- jako první zvolte výrobce -- </option>
+							<option value="" disabled selected> -- vyberte jednu z možností -- </option>
 						</select>
 					</td>
 				</tr>
@@ -49,6 +52,7 @@
 					<td>
 						<select 
 							id="car_model_list">
+							<option value="" disabled selected> -- jako první zvolte výrobce -- </option>
 						</select>
 					</td>
 				</tr>
@@ -104,7 +108,7 @@
 					</td>
 					<td>
 						<input type="number" id="year" name="year" min = 2010 max = 2021 equired minlength="4" maxlength="4" placeholder="například 2015" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
-						<div class="ttYear">?
+						<div class="ttYear"><i class="material-icons" style="font-size:20px; vertical-align: -5px;">info</i>
 							<span class="ttYearText">Zadejte rok výroby 2010 a novější</span>
 						</div>
 					</td>
@@ -199,7 +203,7 @@
 							<option value="3">Prémiová</option>
 							<option value="4">Exkluzivní</option>
 						</select>
-							<div class="ttExtras">?
+							<div class="ttExtras"><i class="material-icons" style="font-size:20px; vertical-align: -5px;">info</i>
 								<span class="ttExtrasText">Vyberte možnost, která se nejvíce přibližuje výbavě nabízené u Vašeho modelu.</span>
 							</div>
 					</td>
@@ -209,7 +213,7 @@
 	</main>
 	<br>
 	<div class="login">
-    <form action="{{ url_for('predict')}}"method="POST">
+    <form action="{{ url_for('predict')}}"method="POST" onsubmit="return passParametres()">
     	<input id = "car_brand_input" type = "hidden" name = "car_brand_input" value = "" />
     	<input id = "car_model_input" type = "hidden" name = "car_model_input" value = "" />
     	<input id = "car_type_input" type = "hidden" name = "car_type_input" value = "" />
@@ -227,7 +231,6 @@
     	<input id = "country_input" type = "hidden" name = "country_input" value = "" />
     	<input id = "extras_input" type = "hidden" name = "extras_input" value = "" />
         <button type="submit" name="submit" id="submitBtn"
-        	onclick = "passParametres()"
         	class="btn">Odhadnout cenu</button>
         <td>
         	<h3>
@@ -276,7 +279,7 @@
 		</b>
 		<br>
 		<b1>
-			Odhadovaná cena v žádném případě neslouží jako referenční hodnota vozidla a využití spočítané hotnody vozidla je poouze na vlastní odpovědnost.
+			Vypočtená cena neslouží jako referenční hodnota vozidla a její využítí je pouze na vlastní odpovědnost.
 		</b1>
 	</div>
 	<br>

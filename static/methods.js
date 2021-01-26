@@ -76,26 +76,36 @@ function passParametres() {
 
 	if (param_list.includes("-- vyberte jednu z možností --") == true) {
 		alert("vyplňte všechny údaje")
+		return false
+	} else if (param_list.includes("-- jako první zvolte výrobce --") == true) {
+		alert("vyplňte všechny údaje")
+		return false
 	} else if (param_list.includes(undefined)) {
 		alert("vyplňte všechny údaje")
-	} else if (param_list.includes("")) {
+		return false
+	} else if (param_list.includes('')) {
 		alert("vyplňte všechny údaje")
+		return false
+	} else if (param_list.length == 0) {
+		alert("vyplňte všechny údaje")
+		return false
 	} else {
-		alert("brand: " + car_brand + "\n" +
-			"model: " + car_model + "\n" +
-			"type: " + type + "\n" +
-			"engine_power: " + engine_power + "\n" +
-			"condition: " + condition + "\n" +
-			"book: " + book + "\n" +
-			"year: " + year + "\n" +
-			"milage: " + milage + "\n" +
-			"fuel: " + fuel + "\n" +
-			"n_ppl: " + n_ppl + "\n" +
-			"airbags: " + airbags + "\n" +
-			"doors: " + doors + "\n" +
-			"aircondition: " + aircondition + "\n" +
-			"transmission: " + transmission + "\n" +
-			"country: " + country + "\n" +
-			"extras: " + extras);
+		return true
+		// alert("brand: " + car_brand + "\n" +
+		// 	"model: " + car_model + "\n" +
+		// 	"type: " + type + "\n" +
+		// 	"engine_power: " + engine_power + "\n" +
+		// 	"condition: " + condition + "\n" +
+		// 	"book: " + book + "\n" +
+		// 	"year: " + year + "\n" +
+		// 	"milage: " + milage + "\n" +
+		// 	"fuel: " + fuel + "\n" +
+		// 	"n_ppl: " + n_ppl + "\n" +
+		// 	"airbags: " + airbags + "\n" +
+		// 	"doors: " + doors + "\n" +
+		// 	"aircondition: " + aircondition + "\n" +
+		// 	"transmission: " + transmission + "\n" +
+		// 	"country: " + country + "\n" +
+		// 	"extras: " + extras);
 	}
 }
