@@ -89,6 +89,9 @@ function passParametres() {
 	} else if (param_list.length == 0) {
 		alert("vyplňte všechny údaje")
 		return false
+	} else if (year < 2010) {
+		alert("rok výroby vozidla musí být mladší 2010")
+		return false
 	} else {
 		return true
 		// alert("brand: " + car_brand + "\n" +
