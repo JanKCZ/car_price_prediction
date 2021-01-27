@@ -5,7 +5,7 @@ import predict_car_price_v2 as predict_file
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/", methods = ["GET", "POST"])
 def home():
 	return render_template("car_price.html")
 
@@ -17,9 +17,7 @@ def predict():
 
 if __name__ == '__main__':
     # app.run(host="0.0.0.0", port=config.PORT, debug=config.DEBUG_MODE)
-	port=int(os.environ.get('PORT',5000))
-    app.run(port=port,debug=True,use_reloader=False)
-    # app.run()
+    app.run()
 
 
 
