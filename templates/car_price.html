@@ -22,10 +22,13 @@
 <body>
 	<header>
 		<h1>
-			Odhad ceny automobilu
+			Odhad tržní ceny automobilu
 		</h1>
 		<h4>
-			Strojové učení, konkrétně Neuronové Sítě (dále jen NS), je zde využito k "vstřebání" informací z více jak 40 tisíc inzerátů automobilů. Výsledkem je NS, která umožňuje odhadovat cenu utomobilu na základě jakýchkoliv vstupních dat.
+			Na této stránce odhadujeme standardní cenu automobilu na trhu. Cenu automobilu je možné určit na základě 16 parametrů, které jsou poté použity pro odhad 
+			pomocí neuronové sítě. Neuronová síť je forma strojového učení, která umožnila prozkoumat více jak 40 tisíc inzerátů automobilů. 
+			Pomocí těchto dat bylo vytvořeno spolehlivé srovnání ceny automobilu s podobnými automobily na trhu.
+			Tento projekt vznikl jako jednoduchá prezentace využití strojového učení.
 			<div class="ttHeading"><i class="material-icons" style="font-size:20px; vertical-align: -5px;">info</i>
 				<span class="ttHeadingText">NS nekontroluje, zda-li může mít např. Porsche 911 osm míst a jeden airbag, ale odhadne, jaká by byla jeho hodnota s ohledem na výrobce, model a další parametry vozidla.</span>
 			</div>
@@ -234,32 +237,32 @@
         <button type="submit" name="submit" id="submitBtn"
         	class="btn">Odhadnout cenu</button>
         <td>
-        	<h3>
+        	<h1>
 				{{pred}}
-			</h3>
+			</h1>
         </td>
     </form>
 	</div>
 	<br>
 	<div>
 		<b>
-			Proč strojového učení:
+			K čemu můžeme použít strojové učení?
 		</b>
 		<br>
 		<b1>
-			Strojové učení je učení v pravém slova smyslu, není zde žádný zdrojový kód, který by zohledňoval každou variantu a každou z milionu kombinací. Algoritmus je schopen se s relativní přeností naučit odhadovat téměř jakékoliv hodnoty, odhalit anomálie, rozpoznat obrázek, anebo například naučit se hrát počítačovou hru. Tento projekt vznikl jako jednoduchá prezentace užitku strojového učení.<br>
+			Neuronová síť aplikovaná na odhad tržní ceny automobilu je pouze jednou z mnoha efektivních a praktických použití strojového učení. 
+			Strojové učení lze využít na rozpoznávání obrázků, předpovídání jakékoliv hodnoty či detekci anomálií, napodobování hlasu, apod. 
+			Tyto algoritmy se umí naučit třeba i hrát počítačové hry, a to lépe než lidé. Hranici možné aplikace této technologie v současné době tvoří pouze naše představivost.<br>
 		</b1>
 	</div>
 	<br>
 	<div>
 		<b>
-			Odchylky od reálné tržní ceny:
+			Odhad tržní ceny oproti reálné tržní ceně:
 		</b>
 		<br>
 		<b1>
-			Zdrojovými daty jsou inzeráty automobilů, které jsou vkládány autobazary, anebo lidmi postrádající potřebné znalosti k odhadnutí ceny. Může proto docházet k účelnému anebo nechtěnému pozměnění prodejní ceny oproti ceně tržní (jako např. "sleva" při využití půjčky, popřípadě očekávaný tlak na cenu ze strany zájemce).<br> 1. Všechny tyto odchylky od skutečné tržní ceny jsou alogritmem absorvovány a naučeny.<br>
-			2. Pokud jsou tedy vstupní data nepřesná, nelze ani od neuronové sítě očekávat 100% přesný odhad.<br>
-			3. U automobilů vyrobených před rokem 2010 docházelo k vysoké deformaci odhadované ceny. Po analýze vstupních dat bylo zjištěno, že tyto automobily mají více skrytých vad plynoucích z opotřebení, apod. Z tohoto důvodu nebyly na učení použity inzeráty těchto automobilů.
+			Při prodeji automobilu může docházet k účelnému anebo nechtěnému pozměnění prodejní ceny oproti ceně tržní (jako např. "sleva" při využití půjčky, popřípadě očekávaný tlak na cenu ze strany zájemce). Vstupní data pro neuronovou síť jsou inzeráty automobilů, které jsou vkládány autobazary, anebo lidmi postrádající potřebné znalosti k odhadnutí ceny automobilu. Díky tomuto může docházet k odchylce odhadnuté ceny od skutečné tržní ceny. Tyto chyby v odhadu ceny jsou algoritmem absorbovány a naučeny, proto nelze zajistit 100% přesnost odhadu, ale předpokládaná cena bude přesto blízká reálné tržní hodnotě. Dále, do odhadu tržní ceny nebyly zahrnuty automobily vyrobené před rokem 2010. U těchto automobilů docházelo k vysoké chybě odhadované ceny, protože tyto starší automobily mají více skrytých vad plynoucích z opotřebení, apod.
 		</b1>
 	</div>
 	<br>
@@ -280,7 +283,7 @@
 		</b>
 		<br>
 		<b1>
-			Vypočtená cena neslouží jako referenční hodnota vozidla a její využítí je pouze na vlastní odpovědnost.
+			Vypočtená cena neslouží jako referenční hodnota vozidla a její využití je pouze na vlastní odpovědnost.
 		</b1>
 	</div>
 	<br>
