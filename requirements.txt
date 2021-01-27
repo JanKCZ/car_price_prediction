@@ -4,4 +4,3 @@ joblib
 Flask
 gunicorn
 scikit-learn
-streamlit

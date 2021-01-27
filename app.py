@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, render_template, request, url_for
 import joblib
+import os
 import predict_car_price_v2 as predict_file
 
 app = Flask(__name__)
@@ -16,7 +17,9 @@ def predict():
 
 if __name__ == '__main__':
     # app.run(host="0.0.0.0", port=config.PORT, debug=config.DEBUG_MODE)
-    app.run()
+	port=int(os.environ.get('PORT',5000))
+    app.run(port=port,debug=True,use_reloader=False)
+    # app.run()
 
 
 
