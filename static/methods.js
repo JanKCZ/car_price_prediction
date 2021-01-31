@@ -40,13 +40,13 @@ function passParametres() {
 	document.getElementById("fuell_input").value = fuel
 	param_list.push(fuel)
 
-	var n_ppl = document.getElementById("n_ppl_list").value
-	document.getElementById("n_ppl_input").value = n_ppl
-	param_list.push(n_ppl)
+	// var n_ppl = document.getElementById("n_ppl_list").value
+	// document.getElementById("n_ppl_input").value = n_ppl
+	// param_list.push(n_ppl)
 
-	var airbags = document.getElementById("n_airbags_list").value
-	document.getElementById("n_airbags_input").value = airbags
-	param_list.push(airbags)
+	// var airbags = document.getElementById("n_airbags_list").value
+	// document.getElementById("n_airbags_input").value = airbags
+	// param_list.push(airbags)
 
 	var doors = document.getElementById("n_doors_list").value
 	document.getElementById("n_doors_input").value = doors
@@ -67,10 +67,10 @@ function passParametres() {
 	document.getElementById("country_input").value = country
 	param_list.push(country)
 
-	var extras_list = document.getElementById("extras_list")
-	var extras = extras_list.options[extras_list.selectedIndex].value
-	document.getElementById("extras_input").value = extras
-	param_list.push(extras)
+	// var extras_list = document.getElementById("extras_list")
+	// var extras = extras_list.options[extras_list.selectedIndex].value
+	// document.getElementById("extras_input").value = extras
+	// param_list.push(extras)
 
 	console.log(param_list)
 
@@ -91,6 +91,9 @@ function passParametres() {
 		return false
 	} else if (year < 2010) {
 		alert("rok výroby vozidla musí být mladší 2010")
+		return false
+	} else if (year > 2021) {
+		alert("rok výroby vozidla nesmí být v budoucnosti")
 		return false
 	} else {
 		return true

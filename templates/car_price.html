@@ -25,8 +25,8 @@
 			Odhad tržní ceny automobilu
 		</h1>
 		<h4>
-			Na této stránce odhadujeme standardní cenu automobilu na trhu. Cenu automobilu je možné určit na základě 16 parametrů, které jsou poté použity pro odhad 
-			pomocí neuronové sítě. Neuronová síť je forma strojového učení, která umožnila prozkoumat více jak 40 tisíc inzerátů automobilů. 
+			Na této stránce odhadujeme standardní cenu automobilu na trhu. Cenu automobilu je možné určit na základě 13 parametrů, které jsou poté použity pro odhad 
+			pomocí neuronové sítě. Neuronová síť je forma strojového učení, která umožnila prozkoumat více jak 60 tisíc inzerátů automobilů. 
 			Pomocí těchto dat bylo vytvořeno spolehlivé srovnání ceny automobilu s podobnými automobily na trhu.
 			Tento projekt vznikl jako jednoduchá prezentace využití strojového učení.
 			<div class="ttHeading"><i class="material-icons" style="font-size:20px; vertical-align: -5px;">info</i>
@@ -137,7 +137,7 @@
 						</select>
 					</td>
 				</tr>
-				<tr>
+				<!-- <tr>
 					<td>
 						Počet míst k sezení: 
 					</td>
@@ -152,7 +152,7 @@
 					<td>
 						<input type="text" id="n_airbags_list" name="n_airbags_list" required minlength="1" maxlength="2" placeholder="například 12" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
 					</td>
-				</tr>
+				</tr> -->
 				<tr>
 					<td>
 						Počet dveří: 
@@ -194,7 +194,7 @@
 						</select>
 					</td>
 				</tr>
-				<tr>
+				<!-- <tr>
 					<td>
 						Výbava: 
 					</td>
@@ -211,7 +211,7 @@
 								<span class="ttExtrasText">Vyberte možnost, která se nejvíce přibližuje výbavě nabízené u Vašeho modelu.</span>
 							</div>
 					</td>
-				</tr>
+				</tr> -->
 			</table>
 		</form>
 	</main>
@@ -227,13 +227,13 @@
     	<input id = "year_input" type = "hidden" name = "year_input" value = "" />
     	<input id = "milage_input" type = "hidden" name = "milage_input" value = "" />
     	<input id = "fuell_input" type = "hidden" name = "fuell_input" value = "" />
-    	<input id = "n_ppl_input" type = "hidden" name = "n_ppl_input" value = "" />
-    	<input id = "n_airbags_input" type = "hidden" name = "n_airbags_input" value = "" />
+    	<!-- <input id = "n_ppl_input" type = "hidden" name = "n_ppl_input" value = "" /> -->
+    	<!-- <input id = "n_airbags_input" type = "hidden" name = "n_airbags_input" value = "" /> -->
     	<input id = "n_doors_input" type = "hidden" name = "n_doors_input" value = "" />
     	<input id = "aircondition_input" type = "hidden" name = "aircondition_input" value = "" />
     	<input id = "transmission_input" type = "hidden" name = "transmission_input" value = "" />
     	<input id = "country_input" type = "hidden" name = "country_input" value = "" />
-    	<input id = "extras_input" type = "hidden" name = "extras_input" value = "" />
+    	<!-- <input id = "extras_input" type = "hidden" name = "extras_input" value = "" /> -->
         <button type="submit" name="submit" id="submitBtn"
         	class="btn">Odhadnout cenu</button>
         <td>
