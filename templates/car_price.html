@@ -3,13 +3,17 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta charset="UTF8">
-	<title>Car price prediction</title>
+	<title>Odhad ceny automobilu</title>
 	<script type="text/javascript"
          src="{{ url_for('static', filename='data.js') }}">
     </script>
 	<script type="text/javascript"
 		href="static/data.js">
-	</script>
+	</script>¨
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
     <script type="text/javascript"
          src="{{ url_for('static', filename='methods.js') }}">
     </script>
@@ -66,7 +70,7 @@
 			<div class="row">
 				<div class="col-sm">
 				<select 
-							class="form-select form-select-lg mb-3" id="condition" style="width:300px;">
+							class="form-select form-select-lg mb-3" id="condition" style="width:300px; height: 48px;">
 							<option disabled selected value >stav vozu</option>
 							<option value="nové">Nové</option>
 							<option value="předváděcí">Předváděcí</option>
@@ -75,7 +79,7 @@
 				</div>
 				<div class="col-sm">
 				<select 
-							class="form-select form-select-lg mb-3" id="book" style="width:300px;">
+							class="form-select form-select-lg mb-3" id="book" style="width:300px; height: 48px;">
 							<option disabled selected value >servisní knížka</option>
 							<option value="ano">Ano</option>
 							<option value="ne">Ne</option>
@@ -83,7 +87,7 @@
 				</div>
 				<div class="col-sm">
 					<select 
-						class="form-select form-select-lg mb-3" id="car_fuel_list" style="width:300px;">
+						class="form-select form-select-lg mb-3" id="car_fuel_list" style="width:300px; height: 48px;">
 						<option value="" disabled selected>palivo</option>
 					</select>
 				</div>
@@ -91,19 +95,19 @@
 			<div class="row">
 				<div class="col-sm">
 				<select 
-							class="form-select form-select-lg mb-3" id="air_condition_list" style="width:300px;">
+							class="form-select form-select-lg mb-3" id="air_condition_list" style="width:300px; height: 48px;">
 							<option value="" disabled selected>klimatizace</option>
 				</select>
 				</div>
 				<div class="col-sm">
 				<select 
-							class="form-select form-select-lg mb-3" id="transmission_list" style="width:300px;">
+							class="form-select form-select-lg mb-3" id="transmission_list" style="width:300px; height: 48px;">
 							<option value="" disabled selected>převodovka</option>
 				</select>
 				</div>
 				<div class="col-sm">
 				<select 
-							class="form-select form-select-lg mb-3" id="country_list" style="width:300px;">
+							class="form-select form-select-lg mb-3" id="country_list" style="width:300px; height: 48px;">
 							<option value="" disabled selected>země původu</option>
 				</select>
 				</div>
@@ -195,7 +199,7 @@
 	  </p>
 	  <div class="collapse" id="collapseExample3">
 		<div class="card card-body">
-			5 skrytých vrstev po 800 neuronech, dropout 0.3, alfa 0.01, batch 32, gradient Adam, activační funkce ReLu, knihovna Scikit-learn MLPRegressor<br>
+			10 skrytých vrstev po 280 neuronech, l2 regularizace a velikost kroku 0.001, batch 32, gradient Adam, activační funkce ReLu, knihovna Scikit-learn MLPRegressor<br>
 			Neuronová síť v tomto případě dosahuje výrazně lepších výsledků než RFR, XGBoost a ostatní regresní metody.
 		</div>
 	  </div>
