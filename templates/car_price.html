@@ -14,228 +14,147 @@
          src="{{ url_for('static', filename='methods.js') }}">
     </script>
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}"/>
-	<!-- <link rel="stylesheet" href="static/styles/style.css"/> -->
-	<!-- <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> -->
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 </head>
 <body>
-	<header>
-		<h1>
-			Odhad tržní ceny automobilu
-		</h1>
-		<h4>
-			Na této stránce odhadujeme standardní cenu automobilu na trhu. Cenu automobilu je možné určit na základě 13 parametrů, které jsou poté použity pro odhad 
-			pomocí neuronové sítě. Neuronová síť je forma strojového učení, která umožnila prozkoumat více jak 60 tisíc inzerátů automobilů. 
-			Pomocí těchto dat bylo vytvořeno spolehlivé srovnání ceny automobilu s podobnými automobily na trhu.
-			Tento projekt vznikl jako jednoduchá prezentace využití strojového učení.
-			<div class="ttHeading"><i class="material-icons" style="font-size:20px; vertical-align: -5px;">info</i>
-				<span class="ttHeadingText">NS nekontroluje, zda-li může mít např. Porsche 911 osm míst a jeden airbag, ale odhadne, jaká by byla jeho hodnota s ohledem na výrobce, model a další parametry vozidla.</span>
-			</div>
-		</h4>
+	<div class="container">
 		<br>
+	<header>
+		<center>
+			<h1>
+				Odhad tržní ceny automobilu
+			</h1>
+			<b1>
+				Na této stránce odhadujeme standardní cenu automobilu na trhu. Cenu automobilu je možné určit na základě 13 parametrů, které jsou poté použity pro odhad 
+				pomocí neuronové sítě. Neuronová síť je forma strojového učení, která umožnila prozkoumat více jak 60 tisíc inzerátů automobilů. 
+				Pomocí těchto dat bylo vytvořeno spolehlivé srovnání ceny automobilu s podobnými automobily na trhu.
+				Tento projekt vznikl jako jednoduchá prezentace využití strojového učení.
+				<!-- <div class="ttHeading"><i class="material-icons" style="font-size:20px; vertical-align: -5px;">info</i>
+					<span class="ttHeadingText">NS nekontroluje, zda-li může mít např. Porsche 911 osm míst a milion najetých km, ale odhadne, jaká by byla jeho hodnota s ohledem na výrobce, model a další parametry vozidla.</span>
+				</div> -->
+			</b1>
+			<br>
+		</center>
 	</header>
 	<main>
+	<center>
+		<br><br>
 		<form>
-			<table>
-				<tr>
-					<td>
-						Výrobce: 
-					</td>
-					<td>
-						<select
-							id="car_brand_list">
-							<option value="" disabled selected> -- vyberte jednu z možností -- </option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Model: 
-					</td>
-					<td>
-						<select 
-							id="car_model_list">
-							<option value="" disabled selected> -- jako první zvolte výrobce -- </option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Karoserie: 
-					</td>
-					<td>
-						<select 
-							id="car_type_list">
-							<option disabled selected value > -- vyberte jednu z možností -- </option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Výkon v kW:
-					</td>
-					<td>
-						<input type="text" id="engine_power" name="engine_power" required minlength="1" maxlength="3" placeholder="například 90" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Stav: 
-					</td>
-					<td>
-						<select
-						id="condition">
-							<option disabled selected value > -- vyberte jednu z možností -- </option>
+			<div class="row">
+				<div class="col-sm">
+				<select
+							class="form-select form-select-lg mb-3" id="car_brand_list" style="width:300px;">
+							<option value="" disabled selected>výrobce</option>
+				</select>
+				</div>
+				<div class="col-sm">
+				<select 
+							class="form-select form-select-lg mb-3" id="car_model_list" style="width:300px;">
+							<option value="" disabled selected>model</option>
+				</select>
+				</div>
+				<div class="col-sm">
+				<select 
+							class="form-select form-select-lg mb-3" id="car_type_list" style="width:300px;">
+							<option value="" disabled selected>karoserie</option>
+				</select>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm">
+				<select 
+							class="form-select form-select-lg mb-3" id="condition" style="width:300px;">
+							<option disabled selected value >stav vozu</option>
 							<option value="nové">Nové</option>
 							<option value="předváděcí">Předváděcí</option>
 							<option value="ojeté">Ojeté</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Servisní knížka: 
-					</td>
-					<td>
-						<select
-						id="book">
-							<option disabled selected value > -- vyberte jednu z možností -- </option>
+				</select>
+				</div>
+				<div class="col-sm">
+				<select 
+							class="form-select form-select-lg mb-3" id="book" style="width:300px;">
+							<option disabled selected value >servisní knížka</option>
 							<option value="ano">Ano</option>
 							<option value="ne">Ne</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Rok výroby (min 2010):
-					</td>
-					<td>
-						<input type="number" id="year" name="year" min = 2010 max = 2021 equired minlength="4" maxlength="4" placeholder="například 2015" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
-						<div class="ttYear"><i class="material-icons" style="font-size:20px; vertical-align: -5px;">info</i>
-							<span class="ttYearText">Zadejte rok výroby 2010 a novější</span>
-						</div>
-					</td>
-
-				</tr>
-				<tr>
-					<td>
-						Počet najetých km:
-					</td>
-					<td>
-						<input type="text" id="milage" name="milage" required minlength="1" maxlength="6" placeholder="například 150000" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Palivo: 
-					</td>
-					<td>
-						<select
-							id="car_fuel_list"> 
-							<option disabled selected value > -- vyberte jednu z možností -- </option>
-						</select>
-					</td>
-				</tr>
-				<!-- <tr>
-					<td>
-						Počet míst k sezení: 
-					</td>
-					<td>
-						<input type="text" id="n_ppl_list" name="n_ppl_list" required minlength="1" maxlength="1" placeholder="například 5" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Počet airbagů: 
-					</td>
-					<td>
-						<input type="text" id="n_airbags_list" name="n_airbags_list" required minlength="1" maxlength="2" placeholder="například 12" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
-					</td>
-				</tr> -->
-				<tr>
-					<td>
-						Počet dveří: 
-					</td>
-					<td>
-						<input type="text" id="n_doors_list" name="n_doors_list" required minlength="1" maxlength="1" placeholder="například 5" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Klimatizace: 
-					</td>
-					<td>
-						<select 
-							id="air_condition_list">
-							<option disabled selected value > -- vyberte jednu z možností -- </option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Převodovka: 
-					</td>
-					<td>
-						<select 
-							id="transmission_list">
-							<option disabled selected value > -- vyberte jednu z možností -- </option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Země původu: 
-					</td>
-					<td>
-						<select 
-							id="country_list">
-							<option disabled selected value > -- vyberte jednu z možností -- </option>
-						</select>
-					</td>
-				</tr>
-				<!-- <tr>
-					<td>
-						Výbava: 
-					</td>
-					<td>
-						<select 
-							id="extras_list">
-							<option disabled selected value > -- vyberte jednu z možností -- </option>
-							<option value="1">Minimální</option>
-							<option value="2">Standardní</option>
-							<option value="3">Prémiová</option>
-							<option value="4">Exkluzivní</option>
-						</select>
-							<div class="ttExtras"><i class="material-icons" style="font-size:20px; vertical-align: -5px;">info</i>
-								<span class="ttExtrasText">Vyberte možnost, která se nejvíce přibližuje výbavě nabízené u Vašeho modelu.</span>
-							</div>
-					</td>
-				</tr> -->
-			</table>
+				</select>
+				</div>
+				<div class="col-sm">
+					<select 
+						class="form-select form-select-lg mb-3" id="car_fuel_list" style="width:300px;">
+						<option value="" disabled selected>palivo</option>
+					</select>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm">
+				<select 
+							class="form-select form-select-lg mb-3" id="air_condition_list" style="width:300px;">
+							<option value="" disabled selected>klimatizace</option>
+				</select>
+				</div>
+				<div class="col-sm">
+				<select 
+							class="form-select form-select-lg mb-3" id="transmission_list" style="width:300px;">
+							<option value="" disabled selected>převodovka</option>
+				</select>
+				</div>
+				<div class="col-sm">
+				<select 
+							class="form-select form-select-lg mb-3" id="country_list" style="width:300px;">
+							<option value="" disabled selected>země původu</option>
+				</select>
+				</div>
+			</div>	
+			<div class="row">
+				<div class="col-sm">
+					<div class="mb-3">
+						<label for="exampleFormControlInput1" class="form-label">Rok výroby (min 2010)</label>
+						<input type="number" id="year" name="year" class="form-control" style="width:300px;" min = 2010 max = 2021 equired minlength="4" maxlength="4" placeholder="např. 2015" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
+					</div>
+				</div>
+				<div class="col-sm">
+					<div class="mb-3">
+						<label for="exampleFormControlInput1" class="form-label">Počet dveří</label>
+						<input type="text" id="n_doors_list" name="n_doors_list" class="form-control" style="width:300px;" required minlength="1" maxlength="1" placeholder="počet dveří" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
+					</div>
+				</div>
+				<div class="col-sm">
+					<div class="mb-3">
+						<label for="exampleFormControlInput1" class="form-label">Výkon motoru v kW</label>
+						<input type="text" id="engine_power" name="engine_power" class="form-control" style="width:300px;" required minlength="1" maxlength="3" placeholder="např. 90" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
+					</div>
+				</div>
+			</div>
+				<div class="mb-3">
+					<label for="exampleFormControlInput1" class="form-label">Počet km</label>
+					<input type="text" id="milage" name="milage" class="form-control" style="width:300px;" required minlength="1" maxlength="7" placeholder="např. 140500" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
+				</div>
+			<br>
 		</form>
+	</center>
 	</main>
 	<br>
+	<center>
 	<div class="login">
     <form action="{{ url_for('predict')}}"method="POST" onsubmit="return passParametres()">
     	<input id = "car_brand_input" type = "hidden" name = "car_brand_input" value = "" />
     	<input id = "car_model_input" type = "hidden" name = "car_model_input" value = "" />
     	<input id = "car_type_input" type = "hidden" name = "car_type_input" value = "" />
-    	<input id = "engine_power_input" type = "hidden" name = "engine_power_input" value = "" />
     	<input id = "condition_input" type = "hidden" name = "condition_input" value = "" />
     	<input id = "service_book_input" type = "hidden" name = "service_book_input" value = "" />
     	<input id = "year_input" type = "hidden" name = "year_input" value = "" />
-    	<input id = "milage_input" type = "hidden" name = "milage_input" value = "" />
     	<input id = "fuell_input" type = "hidden" name = "fuell_input" value = "" />
-    	<!-- <input id = "n_ppl_input" type = "hidden" name = "n_ppl_input" value = "" /> -->
-    	<!-- <input id = "n_airbags_input" type = "hidden" name = "n_airbags_input" value = "" /> -->
     	<input id = "n_doors_input" type = "hidden" name = "n_doors_input" value = "" />
     	<input id = "aircondition_input" type = "hidden" name = "aircondition_input" value = "" />
     	<input id = "transmission_input" type = "hidden" name = "transmission_input" value = "" />
     	<input id = "country_input" type = "hidden" name = "country_input" value = "" />
-    	<!-- <input id = "extras_input" type = "hidden" name = "extras_input" value = "" /> -->
-        <button type="submit" name="submit" id="submitBtn"
-        	class="btn">Odhadnout cenu</button>
+		<input id = "engine_power_input" type = "hidden" name = "engine_power_input" value = "" />
+		<input id = "milage_input" type = "hidden" name = "milage_input" value = "" />
+		<button type="submit" class="btn btn-primary btn-lg" id="submitBtn" style="background-color: gray; border-color: gray; width: 300px;">Odhadnout cenu</button>
+		<br>
         <td>
         	<h1>
 				{{pred}}
@@ -243,39 +162,43 @@
         </td>
     </form>
 	</div>
-	<br>
-	<div>
-		<b>
+	</center>
+	<br><br>
+	<p>
+		<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample1" aria-expanded="false" aria-controls="collapseExample1" style="background-color: white; color: black; border-color: gray;">
 			K čemu můžeme použít strojové učení?
-		</b>
-		<br>
-		<b1>
+		</button>
+	  </p>
+	  <div class="collapse" id="collapseExample1">
+		<div class="card card-body">
 			Neuronová síť aplikovaná na odhad tržní ceny automobilu je pouze jednou z mnoha efektivních a praktických použití strojového učení. 
 			Strojové učení lze využít na rozpoznávání obrázků, předpovídání jakékoliv hodnoty či detekci anomálií, napodobování hlasu, apod. 
 			Tyto algoritmy se umí naučit třeba i hrát počítačové hry, a to lépe než lidé. Hranici možné aplikace této technologie v současné době tvoří pouze naše představivost.<br>
-		</b1>
-	</div>
+		</div>
+	  </div>
 	<br>
-	<div>
-		<b>
-			Odhad tržní ceny oproti reálné tržní ceně:
-		</b>
-		<br>
-		<b1>
+	<p>
+		<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2" style="background-color: white; color: black; border-color: gray;">
+			Proč se může lišit odhad od reálné tržní ceny?
+		</button>
+	  </p>
+	  <div class="collapse" id="collapseExample2">
+		<div class="card card-body">
 			Při prodeji automobilu může docházet k účelnému anebo nechtěnému pozměnění prodejní ceny oproti ceně tržní (jako např. "sleva" při využití půjčky, popřípadě očekávaný tlak na cenu ze strany zájemce). Vstupní data pro neuronovou síť jsou inzeráty automobilů, které jsou vkládány autobazary, anebo lidmi postrádající potřebné znalosti k odhadnutí ceny automobilu. Díky tomuto může docházet k odchylce odhadnuté ceny od skutečné tržní ceny. Tyto chyby v odhadu ceny jsou algoritmem absorbovány a naučeny, proto nelze zajistit 100% přesnost odhadu, ale předpokládaná cena bude přesto blízká reálné tržní hodnotě. Dále, do odhadu tržní ceny nebyly zahrnuty automobily vyrobené před rokem 2010. U těchto automobilů docházelo k vysoké chybě odhadované ceny, protože tyto starší automobily mají více skrytých vad plynoucích z opotřebení, apod.
-		</b1>
-	</div>
+		</div>
+	  </div>
 	<br>
-	<div>
-		<b>
-			Specifikace neuronové sítě:
-		</b>
-		<br>
-		<b1>
+	<p>
+		<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample3" aria-expanded="false" aria-controls="collapseExample3" style="background-color: white; color: black; border-color: gray;">
+			Jaké jsou parametry použité Neuronové sítě?
+		</button>
+	  </p>
+	  <div class="collapse" id="collapseExample3">
+		<div class="card card-body">
 			5 skrytých vrstev po 800 neuronech, dropout 0.3, alfa 0.01, batch 32, gradient Adam, activační funkce ReLu, knihovna Scikit-learn MLPRegressor<br>
 			Neuronová síť v tomto případě dosahuje výrazně lepších výsledků než RFR, XGBoost a ostatní regresní metody.
-		</b1>
-	</div>
+		</div>
+	  </div>
 	<br>
 	<div>
 		<b>
@@ -291,11 +214,13 @@
 	<address>
 		Kontakt <a href="mailto:jan.kolnik@gmail.com">jan.kolnik@gmail.com</a>.<br> 
 	</address>
+	</div>
 </body>
 	<script>
 		//VARIABLES
 		var car_brand
 		var car_model
+		var selected_element_color = "lightgreen"
 
 		//CAR BRAND and MODEL
 		var car_brand_Object = Object.keys(car_brand_model_dict);
@@ -307,24 +232,51 @@
 		var select_model_list = document.getElementById("car_model_list");
 
 		function clear_list() {
+			select_model_list.style.backgroundColor = "white"
 			var i, L = select_model_list.options.length - 1;
+
 		    for(i = L; i >= 0; i--) {
-		      select_model_list.remove(i);
+				if (select_model_list.options[i].text != "model") {
+					select_model_list.remove(i);
+				}
 		   	}
 		}
 
 		select_brand_list.addEventListener("change", function() {
 			car_brand = Object.keys(car_brand_model_dict)[select_brand_list.value];
 			clear_list();
+			select_brand_list.style.backgroundColor = selected_element_color;
 			display_car_models(car_brand);
 		})
 
 		function display_car_models(car_brand) {
 			var car_model_Object = car_brand_model_dict[car_brand];
+			// select_model_list.options[0] = new Option("model", "", false, false);
 			for(index in car_model_Object) {
    	 			select_model_list.options[select_model_list.options.length] = new Option(car_model_Object[index], index);
 			}
 		}
+
+		function add_listeners_color(elementID) {
+			var element = document.getElementById(elementID);
+			element.addEventListener("change", function() {
+				element.style.backgroundColor = selected_element_color;
+			})
+		}
+
+		add_listeners_color("condition");
+		add_listeners_color("car_model_list");
+		add_listeners_color("transmission_list")
+		add_listeners_color("air_condition_list")
+		add_listeners_color("country_list")
+		add_listeners_color("car_type_list")
+		add_listeners_color("book")
+		add_listeners_color("n_doors_list")
+		add_listeners_color("year")
+		add_listeners_color("engine_power")
+		add_listeners_color("milage")
+		add_listeners_color("car_fuel_list")
+
 
 		function load_data_to_list(elementID, data, sort) {
 			var list = document.getElementById(elementID);
