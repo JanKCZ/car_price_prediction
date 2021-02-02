@@ -200,9 +200,9 @@ data_frame_training_ready.loc[data_frame_training_ready['milage'] == 0, 'milage'
 data_frame_training_ready.loc[data_frame_training_ready['year'] != np.nan, 'year'] = data_frame_training_ready['year'] - 2009
 
 #dropping older cars with way to low milage
-older_cars = data_frame_training_ready[lambda data: data.year < 8].index
-old_and_low_milage = data_frame_training_ready.loc[older_cars][lambda data: data.milage < 6000].index
-data_frame_training_ready = data_frame_training_ready.drop(old_and_low_milage)
+# older_cars = data_frame_training_ready[lambda data: data.year < 8].index
+# old_and_low_milage = data_frame_training_ready.loc[older_cars][lambda data: data.milage < 6000].index
+# data_frame_training_ready = data_frame_training_ready.drop(old_and_low_milage)
 
 print("using ordinal on service_book, air_condition, condition")
 data_frame_training_ready.air_condition = data_frame_training_ready.air_condition.replace(['bez klimatizace'], 0)
