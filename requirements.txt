@@ -3,5 +3,4 @@ numpy
 joblib
 Flask
 gunicorn
-scikit-learn
--e https://google-coral.github.io/py-repo/ tflite_runtime
+tensorflow
