@@ -28,11 +28,14 @@
 				Pomocí těchto dat bylo vytvořeno spolehlivé srovnání ceny automobilu s podobnými automobily na trhu.
 				Tento projekt vznikl jako jednoduchá prezentace využití strojového učení.
 			</b1>
-			<br>
+			<br><br>
 		</center>
 	</header>
 	<main>
 	<center>
+		<h1 id="pred" style="color: green;">
+			{{pred}}
+		</h1>
 		<br><br>
 		<form>
 			<div class="row">
@@ -110,19 +113,19 @@
 				<div class="col-sm">
 					<div class="mb-3">
 						<label for="exampleFormControlInput1" class="form-label">Počet dveří</label>
-						<input type="text" id="n_doors_list" name="n_doors_list" class="form-control" style="width:300px;" required minlength="1" maxlength="1" placeholder="počet dveří" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
+						<input type="number" id="n_doors_list" name="n_doors_list" class="form-control" style="width:300px;" min = 1 max = 9 required minlength="1" maxlength="1" placeholder="počet dveří" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
 					</div>
 				</div>
 				<div class="col-sm">
 					<div class="mb-3">
 						<label for="exampleFormControlInput1" class="form-label">Výkon motoru v kW</label>
-						<input type="text" id="engine_power" name="engine_power" class="form-control" style="width:300px;" required minlength="1" maxlength="3" placeholder="např. 90" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
+						<input type="number" id="engine_power" name="engine_power" class="form-control" style="width:300px;" min = 0 max = 999 required minlength="1" maxlength="3" placeholder="např. 90" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
 					</div>
 				</div>
 			</div>
 				<div class="mb-3">
 					<label for="exampleFormControlInput1" class="form-label">Počet km</label>
-					<input type="text" id="milage" name="milage" class="form-control" style="width:300px;" required minlength="1" maxlength="7" placeholder="např. 140500" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
+					<input type="number" id="milage" name="milage" class="form-control" style="width:300px;" min = 0 max = 9999999 required minlength="1" maxlength="7" placeholder="např. 140500" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
 				</div>
 			<br>
 		</form>
@@ -146,12 +149,7 @@
 		<input id = "engine_power_input" type = "hidden" name = "engine_power_input" value = "" />
 		<input id = "milage_input" type = "hidden" name = "milage_input" value = "" />
 		<button type="submit" class="btn btn-primary btn-lg" id="submitBtn" style="background-color: gray; border-color: gray; width: 300px;">Odhadnout cenu</button>
-		<br>
-        <td>
-        	<h1>
-				{{pred}}
-			</h1>
-        </td>
+		<br><br>
     </form>
 	</div>
 	</center>
