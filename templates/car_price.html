@@ -7,19 +7,10 @@
 	<script type="text/javascript"
          src="{{ url_for('static', filename='data.js') }}">
     </script>
-	<script type="text/javascript"
-		href="static/data.js">
-	</script>¨
-	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-	<link rel="manifest" href="/site.webmanifest">
     <script type="text/javascript"
          src="{{ url_for('static', filename='methods.js') }}">
     </script>
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}"/>
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 </head>
@@ -36,9 +27,6 @@
 				pomocí neuronové sítě. Neuronová síť je forma strojového učení, která umožnila prozkoumat více jak 60 tisíc inzerátů automobilů. 
 				Pomocí těchto dat bylo vytvořeno spolehlivé srovnání ceny automobilu s podobnými automobily na trhu.
 				Tento projekt vznikl jako jednoduchá prezentace využití strojového učení.
-				<!-- <div class="ttHeading"><i class="material-icons" style="font-size:20px; vertical-align: -5px;">info</i>
-					<span class="ttHeadingText">NS nekontroluje, zda-li může mít např. Porsche 911 osm míst a milion najetých km, ale odhadne, jaká by byla jeho hodnota s ohledem na výrobce, model a další parametry vozidla.</span>
-				</div> -->
 			</b1>
 			<br>
 		</center>
@@ -255,7 +243,6 @@
 
 		function display_car_models(car_brand) {
 			var car_model_Object = car_brand_model_dict[car_brand];
-			// select_model_list.options[0] = new Option("model", "", false, false);
 			for(index in car_model_Object) {
    	 			select_model_list.options[select_model_list.options.length] = new Option(car_model_Object[index], index);
 			}

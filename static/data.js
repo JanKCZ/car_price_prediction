@@ -16,19 +16,6 @@ var car_type_data = ['hatchback', 'sedan/limuzína', 'MPV', 'liftback', 'SUV', '
 	       'kupé', 'VAN', 'pick-up', 'kabriolet', 'terénní', 'CUV',
 	       'roadster'];
 
-var extras_data = [
-					"základní",
-					"standardní",
-					"prémiová",
-					"exkluzivní",
-	];
-
-var n_doors = [1, 2, 3, 4, 5, 6];
-
-var n_ppl = [1, 2, 3, 4, 5, 6];
-
-var n_airbags = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
-
 var car_brand_model_dict = {'Abarth': ['595', '500', '695', 'Punto'],
  'Acura': ['MDX'],
  'Aixam': ['CROSSOVER', 'Minauto', 'GTO', 'CITY', 'CROSSLINE', 'Coupé'],
@@ -688,6 +675,19 @@ var car_brand_model_dict = {'Abarth': ['595', '500', '695', 'Punto'],
   'Kizashi',
   'Baleno',
   'Across'],
+  'Škoda': ['Octavia',
+  'Fabia',
+  'Superb',
+  'Rapid',
+  'Scala',
+  'Kodiaq',
+  'Yeti',
+  'Roomster',
+  'Karoq',
+  'Citigo',
+  'Kamiq',
+  'Felicia',
+  'Favorit'],
  'Tesla': ['Model S', 'Model 3'],
  'Toyota': ['Corolla',
   'Yaris',
@@ -762,20 +762,7 @@ var car_brand_model_dict = {'Abarth': ['595', '500', '695', 'Punto'],
   'S90',
   'C30',
   'S40',
-  'C70'],
- 'Škoda': ['Octavia',
-  'Fabia',
-  'Superb',
-  'Rapid',
-  'Scala',
-  'Kodiaq',
-  'Yeti',
-  'Roomster',
-  'Karoq',
-  'Citigo',
-  'Kamiq',
-  'Felicia',
-  'Favorit']};
+  'C70']};
 
 
 
