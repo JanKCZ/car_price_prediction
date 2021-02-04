@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 import joblib
 
 def load_model():
@@ -47,17 +46,18 @@ def make_test_prediction(int_features):
 	#ORDINALS book
 	to_predict.service_book = to_predict.service_book.replace(['ano'], 1)
 	to_predict.service_book = to_predict.service_book.replace(['ne'], 0)
-	to_predict.service_book = to_predict.service_book.replace([np.nan], 0)
+	# to_predict.service_book = to_predict.service_book.replace([math.nan], 0)
 	
 	#ORDINALS condition
 	to_predict.condition = to_predict.condition.replace(['nové'], 2)
 	to_predict.condition = to_predict.condition.replace(['předváděcí'], 1)
 	to_predict.condition = to_predict.condition.replace(['ojeté'], 0)
 	
-	to_predict[num_columns] = to_predict[num_columns].astype(np.float32)
+	to_predict[num_columns] = to_predict[num_columns].astype("float32")
 	
-	#years will only be fro 1 to 11
-	to_predict.loc[to_predict['year'] != np.nan, 'year'] = to_predict['year'] - 2009
+	#years will only be fro 1 to 20
+	# to_predict.loc[to_predict['year'] != np.nan, 'year'] = to_predict['year'] - 2000
+	to_predict['year'] = to_predict['year'] - 2000
 
 	to_predict_final = transformator.transform(to_predict[all_columns])
 	prediction = model.predict(to_predict_final)
