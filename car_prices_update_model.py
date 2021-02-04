@@ -179,7 +179,7 @@ from datetime import datetime
 # print("saving to CSV, preprocessed, shape: ", data_frame_training_ready.shape)
 # data_frame_training_ready.to_csv ('/Users/jankolnik/Downloads/car_list_sauto_preprocessed_2.csv', index = False, header=True)
 drop_nan = True               # use KNN imputer to impute num and cat values
-drop_year = 2011
+drop_year = 2000
 is_sparse = False
 drop_wrong_power_ccm_combination = True
 
@@ -197,7 +197,7 @@ data_frame_training_ready = data_frame_training_ready.drop(data_frame_training_r
 #change milage to 1, so years can be divided by it
 data_frame_training_ready.loc[data_frame_training_ready['milage'] == 0, 'milage'] = 1
 #years will only be fro 1 to 11
-data_frame_training_ready.loc[data_frame_training_ready['year'] != np.nan, 'year'] = data_frame_training_ready['year'] - 2009
+data_frame_training_ready.loc[data_frame_training_ready['year'] != np.nan, 'year'] = data_frame_training_ready['year'] - 2000
 
 #dropping older cars with way to low milage
 # older_cars = data_frame_training_ready[lambda data: data.year < 8].index
@@ -324,7 +324,7 @@ def test_result(model, n_tests):
 
 
 clf = MLPRegressor(solver='adam', alpha=0.001, learning_rate_init=0.001, 
-                    hidden_layer_sizes=(10, 280), random_state=42, 
+                    hidden_layer_sizes=(20, 300), random_state=42, 
                     batch_size= 32, verbose = True, max_iter = 500,
                     learning_rate = 'adaptive', warm_start=True,
                     validation_fraction = 0.1, early_stopping = True)

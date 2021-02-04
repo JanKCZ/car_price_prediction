@@ -2,7 +2,6 @@ function passParametres() {
 	var param_list = []
 
 	car_model = select_model_list.options[select_model_list.selectedIndex].text
-	// car_model = select_model_list.text
 	param_list.push(car_brand)
 	document.getElementById("car_brand_input").value = car_brand
 	param_list.push(car_model)
@@ -40,14 +39,6 @@ function passParametres() {
 	document.getElementById("fuell_input").value = fuel
 	param_list.push(fuel)
 
-	// var n_ppl = document.getElementById("n_ppl_list").value
-	// document.getElementById("n_ppl_input").value = n_ppl
-	// param_list.push(n_ppl)
-
-	// var airbags = document.getElementById("n_airbags_list").value
-	// document.getElementById("n_airbags_input").value = airbags
-	// param_list.push(airbags)
-
 	var doors = document.getElementById("n_doors_list").value
 	document.getElementById("n_doors_input").value = doors
 	param_list.push(doors)
@@ -67,11 +58,6 @@ function passParametres() {
 	document.getElementById("country_input").value = country
 	param_list.push(country)
 
-	// var extras_list = document.getElementById("extras_list")
-	// var extras = extras_list.options[extras_list.selectedIndex].value
-	// document.getElementById("extras_input").value = extras
-	// param_list.push(extras)
-
 	console.log(param_list)
 
 	if (param_list.includes("-- vyberte jednu z možností --") == true) {
@@ -89,8 +75,8 @@ function passParametres() {
 	} else if (param_list.length == 0) {
 		alert("vyplňte všechny údaje")
 		return false
-	} else if (year < 2010) {
-		alert("rok výroby vozidla musí být mladší 2010")
+	} else if (year < 2000) {
+		alert("rok výroby vozidla musí být mladší 2000")
 		return false
 	} else if (year > 2021) {
 		alert("rok výroby vozidla nesmí být v budoucnosti")
@@ -113,5 +99,49 @@ function passParametres() {
 		// 	"transmission: " + transmission + "\n" +
 		// 	"country: " + country + "\n" +
 		// 	"extras: " + extras);
+	}
+}
+
+function clear_list() {
+	select_model_list.style.backgroundColor = "white"
+	var i, L = select_model_list.options.length - 1;
+
+	for(i = L; i >= 0; i--) {
+		if (select_model_list.options[i].text != "model") {
+			select_model_list.remove(i);
+		}
+	   }
+}
+
+function display_car_models(car_brand) {
+	var car_model_Object = car_brand_model_dict[car_brand];
+	for(index in car_model_Object) {
+			select_model_list.options[select_model_list.options.length] = new Option(car_model_Object[index], index);
+	}
+}
+
+function add_listeners_color(elementID) {
+	var element = document.getElementById(elementID);
+	element.addEventListener("change", function() {
+		element.style.backgroundColor = selected_element_color;
+	})
+}
+
+function load_data_to_list(elementID, data, sort) {
+	var list = document.getElementById(elementID);
+	for(var i = 0; i < data.length; i++) {
+		if (sort == true) {
+			var opt = data.sort()[i];
+			var el = document.createElement("option");
+			el.text = opt;
+			el.value = opt;
+			list.add(el);
+		} else {
+			var opt = data[i];
+			var el = document.createElement("option");
+			el.text = opt;
+			el.value = opt;
+			list.add(el);
+		}	
 	}
 }

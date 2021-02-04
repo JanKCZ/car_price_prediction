@@ -35,7 +35,7 @@
 			</h1>
 			<b1>
 				Na této stránce odhadujeme standardní cenu automobilu na trhu. Cenu automobilu je možné určit na základě 13 parametrů, které jsou poté použity pro odhad 
-				pomocí neuronové sítě. Neuronová síť je forma strojového učení, která umožnila prozkoumat více jak 60 tisíc inzerátů automobilů. 
+				pomocí neuronové sítě. Neuronová síť je forma strojového učení, která umožnila prozkoumat více jak 90 tisíc inzerátů automobilů. 
 				Pomocí těchto dat bylo vytvořeno spolehlivé srovnání ceny automobilu s podobnými automobily na trhu.
 				Tento projekt vznikl jako jednoduchá prezentace využití strojového učení.
 			</b1>
@@ -45,9 +45,10 @@
 	<main>
 	<center>
 		<h1 id="pred" style="color: green;">
-			{{pred}}
+			{{pred_text}}<br>
+			{{pred_price}}
 		</h1>
-		<br><br>
+		<br>
 		<form>
 			<div class="row">
 				<div class="col-sm">
@@ -117,8 +118,8 @@
 			<div class="row">
 				<div class="col-sm">
 					<div class="mb-3">
-						<label for="exampleFormControlInput1" class="form-label">Rok výroby (min 2010)</label>
-						<input type="number" id="year" name="year" class="form-control" style="width:300px;" min = 2010 max = 2021 equired minlength="4" maxlength="4" placeholder="např. 2015" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
+						<label for="exampleFormControlInput1" class="form-label">Rok výroby (min 2000)</label>
+						<input type="number" id="year" name="year" class="form-control" style="width:300px;" min = 2000 max = 2021 equired minlength="4" maxlength="4" placeholder="např. 2015" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
 					</div>
 				</div>
 				<div class="col-sm">
@@ -159,14 +160,14 @@
     	<input id = "country_input" type = "hidden" name = "country_input" value = "" />
 		<input id = "engine_power_input" type = "hidden" name = "engine_power_input" value = "" />
 		<input id = "milage_input" type = "hidden" name = "milage_input" value = "" />
-		<button type="submit" class="btn btn-primary btn-lg" id="submitBtn" style="background-color: gray; border-color: gray; width: 300px; font-size: 25px;">Odhadnout cenu</button>
+		<button type="submit" class="btn btn-primary btn-lg" id="submitBtn" style="background-color: rgb(14, 110, 143); border-color: rgb(14, 110, 143); width: 300px; font-size: 25px;">Odhadnout cenu</button>
 		<br><br>
     </form>
 	</div>
 	</center>
 	<br><br>
 	<p>
-		<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample1" aria-expanded="false" aria-controls="collapseExample1" style="background-color: white; color: black; border-color: gray;">
+		<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample1" aria-expanded="false" aria-controls="collapseExample1" style="background-color: white; color: black; border-color: gray; width: 400px; text-align: left;">
 			K čemu můžeme použít strojové učení?
 		</button>
 	  </p>
@@ -179,24 +180,26 @@
 	  </div>
 	<br>
 	<p>
-		<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2" style="background-color: white; color: black; border-color: gray;">
+		<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2" style="background-color: white; color: black; border-color: gray; width: 400px; text-align: left;">
 			Proč se může lišit odhad od reálné tržní ceny?
 		</button>
 	  </p>
 	  <div class="collapse" id="collapseExample2">
 		<div class="card card-body">
-			Při prodeji automobilu může docházet k účelnému anebo nechtěnému pozměnění prodejní ceny oproti ceně tržní (jako např. "sleva" při využití půjčky, popřípadě očekávaný tlak na cenu ze strany zájemce). Vstupní data pro neuronovou síť jsou inzeráty automobilů, které jsou vkládány autobazary, anebo lidmi postrádající potřebné znalosti k odhadnutí ceny automobilu. Díky tomuto může docházet k odchylce odhadnuté ceny od skutečné tržní ceny. Tyto chyby v odhadu ceny jsou algoritmem absorbovány a naučeny, proto nelze zajistit 100% přesnost odhadu, ale předpokládaná cena bude přesto blízká reálné tržní hodnotě. Dále, do odhadu tržní ceny nebyly zahrnuty automobily vyrobené před rokem 2010. U těchto automobilů docházelo k vysoké chybě odhadované ceny, protože tyto starší automobily mají více skrytých vad plynoucích z opotřebení, apod.
+			Při prodeji automobilu může docházet k účelnému anebo nechtěnému pozměnění prodejní ceny oproti ceně tržní (jako např. "sleva" při využití půjčky, popřípadě očekávaný tlak na cenu ze strany zájemce). 
+			Vstupní data pro neuronovou síť jsou inzeráty automobilů, které jsou vkládány autobazary, anebo lidmi postrádající potřebné znalosti k odhadnutí ceny automobilu. 
+			Díky tomuto může docházet k odchylce odhadnuté ceny od skutečné tržní ceny. Tyto chyby v odhadu ceny jsou algoritmem absorbovány a naučeny, proto nelze zajistit 100% přesnost odhadu, ale předpokládaná cena bude přesto blízká reálné tržní hodnotě. 
 		</div>
 	  </div>
 	<br>
 	<p>
-		<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample3" aria-expanded="false" aria-controls="collapseExample3" style="background-color: white; color: black; border-color: gray;">
+		<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample3" aria-expanded="false" aria-controls="collapseExample3" style="background-color: white; color: black; border-color: gray; width: 400px; text-align: left;">
 			Jaké jsou parametry použité Neuronové sítě?
 		</button>
 	  </p>
 	  <div class="collapse" id="collapseExample3">
 		<div class="card card-body">
-			10 skrytých vrstev po 280 neuronech, l2 regularizace a velikost kroku 0.001, batch 32, gradient Adam, activační funkce ReLu, knihovna Scikit-learn MLPRegressor<br>
+			10 skrytých vrstev po 300 neuronech, l2 regularizace a velikost kroku 0.001, batch 32, gradient Adam, activační funkce ReLu, knihovna Scikit-learn MLPRegressor<br>
 			Neuronová síť v tomto případě dosahuje výrazně lepších výsledků než RFR, XGBoost a ostatní regresní metody.
 		</div>
 	  </div>
@@ -221,7 +224,7 @@
 		//VARIABLES
 		var car_brand
 		var car_model
-		var selected_element_color = "lightgreen"
+		var selected_element_color = "lightgreen";
 
 		//CAR BRAND and MODEL
 		var car_brand_Object = Object.keys(car_brand_model_dict);
@@ -232,37 +235,12 @@
 
 		var select_model_list = document.getElementById("car_model_list");
 
-		function clear_list() {
-			select_model_list.style.backgroundColor = "white"
-			var i, L = select_model_list.options.length - 1;
-
-		    for(i = L; i >= 0; i--) {
-				if (select_model_list.options[i].text != "model") {
-					select_model_list.remove(i);
-				}
-		   	}
-		}
-
 		select_brand_list.addEventListener("change", function() {
 			car_brand = Object.keys(car_brand_model_dict)[select_brand_list.value];
 			clear_list();
 			select_brand_list.style.backgroundColor = selected_element_color;
 			display_car_models(car_brand);
 		})
-
-		function display_car_models(car_brand) {
-			var car_model_Object = car_brand_model_dict[car_brand];
-			for(index in car_model_Object) {
-   	 			select_model_list.options[select_model_list.options.length] = new Option(car_model_Object[index], index);
-			}
-		}
-
-		function add_listeners_color(elementID) {
-			var element = document.getElementById(elementID);
-			element.addEventListener("change", function() {
-				element.style.backgroundColor = selected_element_color;
-			})
-		}
 
 		add_listeners_color("condition");
 		add_listeners_color("car_model_list");
@@ -276,26 +254,6 @@
 		add_listeners_color("engine_power")
 		add_listeners_color("milage")
 		add_listeners_color("car_fuel_list")
-
-
-		function load_data_to_list(elementID, data, sort) {
-			var list = document.getElementById(elementID);
-			for(var i = 0; i < data.length; i++) {
-				if (sort == true) {
-					var opt = data.sort()[i];
-				    var el = document.createElement("option");
-				    el.text = opt;
-				    el.value = opt;
-				    list.add(el);
-				} else {
-					var opt = data[i];
-				    var el = document.createElement("option");
-				    el.text = opt;
-				    el.value = opt;
-				    list.add(el);
-				}	
-			}
-		}
 
 		//FUEL
 		load_data_to_list("car_fuel_list", fuell_data, false);

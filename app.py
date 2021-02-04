@@ -13,7 +13,8 @@ def home():
 def predict():
 	int_features = [x for x in request.form.values()]
 	prediction = predict_file.make_test_prediction(int_features)
-	return render_template('car_price.html',pred="Odhadovaná cena:\n {:,.0f} Kč".format(prediction).replace(",", " "))
+	return render_template('car_price.html',pred_text = "Odhadovaná cena:", 
+											pred_price = "{:,.0f} Kč".format(prediction).replace(",", " "))
 
 if __name__ == '__main__':
     # app.run(host="0.0.0.0", port=config.PORT, debug=config.DEBUG_MODE)
