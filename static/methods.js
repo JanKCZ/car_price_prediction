@@ -161,6 +161,7 @@ function passParametres() {
 	var country = country_list.options[country_list.selectedIndex].text
 	document.getElementById("country_input").value = country
 	param_list.push(country)
+
 	return param_list
 }
 

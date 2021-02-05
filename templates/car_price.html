@@ -169,7 +169,7 @@
     	<input id = "country_input" type = "hidden" name = "country_input" value = "" />
 		<input id = "engine_power_input" type = "hidden" name = "engine_power_input" value = "" />
 		<input id = "milage_input" type = "hidden" name = "milage_input" value = "" />
-		<button type="submit" class="btn btn-primary btn-lg" id="submitBtn" onclick="data = passParametres() dataLayer.push({
+		<button type="submit" class="btn btn-primary btn-lg" id="submitBtn" onclick="data = passParametres(); dataLayer.push({
 			'car_brand': data[0],
 			'car_model': data[1],
 			'type': data[2]},
@@ -182,7 +182,7 @@
 			'n_doors': data[9],
 			'aircondition': data[10],
 			'transmission': data[11],
-			'country': data[12],
+			'country': data[12])}""
 		style="background-color: rgb(14, 110, 143); border-color: rgb(14, 110, 143); width: 300px; font-size: 25px;">Odhadnout cenu</button>
 		<br><br>
     </form>
