@@ -58,7 +58,6 @@ def make_test_prediction(int_features):
 
 	# test_list = ["Škoda", "Fabia", "CUV", "Ojeté", "Ne", 2010, "nafta", 5, 0, 0, "Belgie", 74, 100000].reshape(-1, 1)
 
-	to_predict_final = transformator.transform(test_list)
 	to_predict_final = transformator.transform(to_predict[all_columns])
 	prediction = model.predict(to_predict_final)
 
