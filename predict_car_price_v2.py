@@ -33,7 +33,6 @@ def make_test_prediction(int_features):
 	to_predict.loc[0, "country_from"] = int_features[10]
 	to_predict.loc[0, "engine_power"] = int_features[11]
 	to_predict.loc[0, "milage"] = int_features[12]
-
 	
 	#ORDINALS aircondition
 	to_predict.air_condition = to_predict.air_condition.replace(['bez klimatizace'], 0)
@@ -46,7 +45,6 @@ def make_test_prediction(int_features):
 	#ORDINALS book
 	to_predict.service_book = to_predict.service_book.replace(['ano'], 1)
 	to_predict.service_book = to_predict.service_book.replace(['ne'], 0)
-	# to_predict.service_book = to_predict.service_book.replace([math.nan], 0)
 	
 	#ORDINALS condition
 	to_predict.condition = to_predict.condition.replace(['nové'], 2)
@@ -56,10 +54,12 @@ def make_test_prediction(int_features):
 	to_predict[num_columns] = to_predict[num_columns].astype("float32")
 	
 	#years will only be fro 1 to 20
-	# to_predict.loc[to_predict['year'] != np.nan, 'year'] = to_predict['year'] - 2000
 	to_predict['year'] = to_predict['year'] - 2000
 
-	to_predict_final = transformator.transform(to_predict[all_columns])
+	test_list = ["Škoda", "Fabia", "CUV", "Ojeté", "Ne", 2010, "nafta", 5, 0, 0, "Belgie", 74, 100000].reshape(-1, 1)
+
+	to_predict_final = transformator.transform(test_list)
+	# to_predict_final = transformator.transform(to_predict[all_columns])
 	prediction = model.predict(to_predict_final)
 
 	return prediction[0]

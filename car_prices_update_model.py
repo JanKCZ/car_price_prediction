@@ -34,6 +34,7 @@ def yes_no(answer):
       break
     
 if yes_no("update model? y/n: "):
+  print("loading CSV file....")
   raw_data = pd.read_csv('/Users/jankolnik/Downloads/car_list_all_v1_updated_sauto.csv')
 
   raw_data_update = pd.read_csv("/Users/jankolnik/Downloads/car_list_all_v1_sauto_update.csv")
@@ -44,7 +45,7 @@ if yes_no("update model? y/n: "):
   raw_data_updated = raw_data_updated.drop_duplicates(subset=['add_id-href'])
 
   #save to CSV
-  raw_data_updated.to_csv ('/Users/jankolnik/Downloads/car_list_all_v1_updated_sauto.csv', index = False, header=True)
+  raw_data_updated.to_csv('/Users/jankolnik/Downloads/car_list_all_v1_updated_sauto.csv', index = False, header=True)
 
   print("{} shape before update".format(raw_data.shape[0]))
   print("added {} rows of raw data".format(raw_data_update.shape[0]))
@@ -255,7 +256,6 @@ data_frame_training_ready = data_frame_training_ready.drop(big_power_to_ccm)
 cmm_1000 = data_frame_training_ready[lambda data: data.ccm > 1000]
 ccm_1000_power_20 = cmm_1000[lambda data: data.engine_power < 20].index
 data_frame_training_ready = data_frame_training_ready.drop(ccm_1000_power_20)
-print("SIZE HERE: ", data_frame_training_ready.shape)
 
 important_columns = num_columns + cat_columns
 
