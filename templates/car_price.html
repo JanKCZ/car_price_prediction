@@ -24,6 +24,13 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 </head>
 <body>
+	<!-- Custom tracking evenets -->
+	<script>
+		dataLayer = [{
+		  'pageCategory': 'signup',
+		  'visitorType': 'high-value'
+		}];
+	</script>
 	<!-- Google Tag Manager (noscript) -->
 	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-NF6KVBFX79"
 	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -148,7 +155,7 @@
 	<br>
 	<center>
 	<div class="login">
-    <form action="{{ url_for('predict')}}"method="POST" onsubmit="return passParametres()">
+    <form action="{{ url_for('predict')}}"method="POST" onsubmit="return checkParametres()">
     	<input id = "car_brand_input" type = "hidden" name = "car_brand_input" value = "" />
     	<input id = "car_model_input" type = "hidden" name = "car_model_input" value = "" />
     	<input id = "car_type_input" type = "hidden" name = "car_type_input" value = "" />
@@ -162,7 +169,21 @@
     	<input id = "country_input" type = "hidden" name = "country_input" value = "" />
 		<input id = "engine_power_input" type = "hidden" name = "engine_power_input" value = "" />
 		<input id = "milage_input" type = "hidden" name = "milage_input" value = "" />
-		<button type="submit" class="btn btn-primary btn-lg" id="submitBtn" style="background-color: rgb(14, 110, 143); border-color: rgb(14, 110, 143); width: 300px; font-size: 25px;">Odhadnout cenu</button>
+		<button type="submit" class="btn btn-primary btn-lg" id="submitBtn" onclick="data = passParametres() dataLayer.push({
+			'car_brand': data[0],
+			'car_model': data[1],
+			'type': data[2]},
+			'service_book': data[3],
+			'condition': data[4],
+			'year': data[5],
+			'milage': data[6],
+			'engine_power': data[7],
+			'fuell': data[8],
+			'n_doors': data[9],
+			'aircondition': data[10],
+			'transmission': data[11],
+			'country': data[12],
+		style="background-color: rgb(14, 110, 143); border-color: rgb(14, 110, 143); width: 300px; font-size: 25px;">Odhadnout cenu</button>
 		<br><br>
     </form>
 	</div>
