@@ -33,7 +33,9 @@ option {
   background-color: #594fdf;
 }
 
-#submitBtn:hover{background-color:orange;}
+/* #submitBtn:hover {
+  background-color: black;
+} */
 
 /* YEAR tooltip*/
 .ttYear {

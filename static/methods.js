@@ -58,8 +58,6 @@ function checkParametres() {
 	document.getElementById("country_input").value = country
 	param_list.push(country)
 
-	console.log(param_list)
-
 	if (param_list.includes("-- vyberte jednu z možností --") == true) {
 		alert("vyplňte všechny údaje")
 		return false
@@ -162,6 +160,7 @@ function passParametres() {
 	document.getElementById("country_input").value = country
 	param_list.push(country)
 
+	console.log(param_list)
 	return param_list
 }
 
@@ -207,4 +206,45 @@ function load_data_to_list(elementID, data, sort) {
 			list.add(el);
 		}	
 	}
+}
+
+function set_test_values() {
+	document.getElementById("car_brand_list").value= "Audi"
+	document.getElementById("car_brand_list").text= "Audi"
+
+	document.getElementById("car_model_list").value = "A5"
+	document.getElementById("car_model_list").text = "A5"
+
+	document.getElementById("car_type_list").value = "hatchback"
+	document.getElementById("car_type_list").text = "hatchback"
+
+	document.getElementById("book").value = "ano"
+	document.getElementById("book").text = "Ano"
+
+	document.getElementById("condition").value = "ojeté"
+	document.getElementById("condition").text = "Ojeté"
+
+	document.getElementById("year").value = 2015
+	document.getElementById("year").text = 2015
+
+	document.getElementById("milage").value = 150000
+	document.getElementById("milage").text = 150000
+
+	document.getElementById("engine_power").value = 90
+	document.getElementById("engine_power").text = 90
+
+	document.getElementById("car_fuel_list").value = "nafta"
+	document.getElementById("car_fuel_list").text = "nafta"
+
+	document.getElementById("n_doors_list").value = 5
+	document.getElementById("n_doors_list").text = 5
+
+	document.getElementById("air_condition_list").value = "manuální"
+	document.getElementById("air_condition_list").text = "manuální"
+
+	document.getElementById("transmission_list").value = "manuální"
+	document.getElementById("transmission_list").text = "manuální"
+
+	document.getElementById("country_list").value = "Belgie"
+	document.getElementById("country_list").text = "Belgie"
 }

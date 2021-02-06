@@ -154,6 +154,7 @@
 	</main>
 	<br>
 	<center>
+	<!-- <button type="button" class="btn btn-primary btn-sm" onclick="set_test_values()">fill values</button> -->
 	<div class="login">
     <form action="{{ url_for('predict')}}"method="POST" onsubmit="return checkParametres()">
     	<input id = "car_brand_input" type = "hidden" name = "car_brand_input" value = "" />
@@ -170,6 +171,7 @@
 		<input id = "engine_power_input" type = "hidden" name = "engine_power_input" value = "" />
 		<input id = "milage_input" type = "hidden" name = "milage_input" value = "" />
 		<button type="submit" class="btn btn-primary btn-lg" id="submitBtn" onclick="data = passParametres(); dataLayer.push({
+			'test_key':'test_value',
 			'car_brand': data[0],
 			'car_model': data[1],
 			'type': data[2],
