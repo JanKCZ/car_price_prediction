@@ -15,6 +15,10 @@ option {
   width: 143px;
 }
 
+#headline_text {
+  text-align: justify;
+}
+
 #submitBtn {
   background-color: #594fdf;
   border: none;
