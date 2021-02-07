@@ -12,7 +12,7 @@
 	</script>
 	<meta name="description" content="Na této stránce odhadujeme standardní cenu automobilu na trhu s využitím neuronové sítě. Neuronová síť je forma strojového učení, která umožnila prozkoumat více jak 90 tisíc inzerátů automobilů. 
 	Pomocí těchto dat bylo vytvořeno spolehlivé srovnání ceny automobilu s podobnými automobily.">
-	<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta charset="UTF8">
 	<title>Odhad ceny automobilu</title>
 	<script type="text/javascript"
@@ -267,6 +267,10 @@
 			clear_list();
 			select_brand_list.style.backgroundColor = selected_element_color;
 			display_car_models(car_brand);
+
+			dataLayer.push({
+				"selected_car_brand":car_brand
+			});
 		})
 
 		add_listeners_color("condition");
