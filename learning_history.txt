@@ -41,3 +41,13 @@
 2021-02-04 15:35:52.962258  average error:   10.95%, median error:    8.12%, absolute error:   80888, score:   0.957, max error:   84.98%, set size: 89720
 2021-02-04 15:41:58.860140  average error:   11.14%, median error:    8.14%, absolute error:   80601, score:   0.958, max error:   86.44%, set size: 89720
 2021-02-05 11:22:43.715099  average error:   12.02%, median error:    9.00%, absolute error:   82726, score:   0.958, max error:   97.39%, set size: 89828
+2021-02-08 21:39:05.501358  average error:   12.02%, median error:    9.00%, absolute error:   82726, score:   0.958, max error:   97.39%, set size: 89828
+2021-02-08 21:50:05.417600  average error:   46.93%, median error:   26.52%, absolute error:  239079, score:   0.648, max error:  646.06%, set size: 89828
+2021-02-08 21:56:15.807589  average error:   12.02%, median error:    9.00%, absolute error:   82726, score:   0.958, max error:   97.39%, set size: 89828
+2021-02-09 09:36:00.415893  average error:   12.02%, median error:    9.00%, absolute error:   82726, score:   0.958, max error:   97.39%, set size: 89828
+2021-02-09 09:42:44.203715  average error:   12.02%, median error:    9.00%, absolute error:   82726, score:   0.958, max error:   97.39%, set size: 89828
+2021-02-09 10:35:20.368487  average error:   12.44%, median error:    8.52%, absolute error:   82483, score:   0.957, max error:  176.00%, set size: 90034
+2021-02-09 10:40:31.544548  average error:   12.83%, median error:    8.92%, absolute error:   75898, score:   0.962, max error:  198.06%, set size: 89819
+2021-02-09 11:34:31.651993  average error:   13.11%, median error:    9.32%, absolute error:   75410, score:   0.963, max error:  232.94%, set size: 89819
+2021-02-09 11:42:32.096206  average error:   12.46%, median error:    8.62%, absolute error:   76595, score:   0.961, max error:  180.23%, set size: 89819
+2021-02-09 11:57:56.753479  average error:   12.44%, median error:    8.87%, absolute error:   75410, score:   0.963, max error:  232.94%, set size: 89819

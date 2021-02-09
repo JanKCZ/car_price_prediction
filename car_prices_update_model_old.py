@@ -7,12 +7,13 @@
 import pandas as pd
 import numpy as np
 import copy
-from sklearn.impute import SimpleImputer
+from sklearn.impute import SimpleImputer, KNNImputer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder, LabelEncoder, OrdinalEncoder, Normalizer, RobustScaler
 from sklearn.pipeline import make_pipeline, Pipeline
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error as mse
 from sklearn.compose import ColumnTransformer
+from sklearn.ensemble import GradientBoostingRegressor
 import sklearn
 import math
 from sklearn.neural_network import MLPRegressor
@@ -23,168 +24,183 @@ import joblib
 from datetime import datetime
 
 
-raw_data = pd.read_csv('/Users/jankolnik/Downloads/car_list_all_v1_updated_sauto.csv')
+def yes_no(answer):
+  user_input = input(answer)
+  while True:
+    if user_input == "y":
+      return True
+    elif user_input == "n":
+      return False
+    else:
+      print("answer y or n")
+      break
+    
+if yes_no("update model? y/n: "):
+  print("loading CSV file....")
+  raw_data = pd.read_csv('/Users/jankolnik/Downloads/car_list_all_v1_updated_sauto.csv')
 
-raw_data_update = pd.read_csv("/Users/jankolnik/Downloads/car_list_all_v1_sauto_update.csv")
+  raw_data_update = pd.read_csv("/Users/jankolnik/Downloads/car_list_all_v1_sauto_update.csv")
 
-raw_data_updated = pd.concat([raw_data, raw_data_update])
+  raw_data_updated = pd.concat([raw_data, raw_data_update])
 
-#drop duplicated adds
-raw_data_updated = raw_data_updated.drop_duplicates(subset=['add_id-href'])
+  #drop duplicated adds
+  raw_data_updated = raw_data_updated.drop_duplicates(subset=['add_id-href'])
 
-#save to CSV
-raw_data_updated.to_csv ('/Users/jankolnik/Downloads/car_list_all_v1_updated_sauto.csv', index = False, header=True)
+  #save to CSV
+  raw_data_updated.to_csv('/Users/jankolnik/Downloads/car_list_all_v1_updated_sauto.csv', index = False, header=True)
 
-print("{} shape before update".format(raw_data.shape[0]))
-print("added {} rows of raw data".format(raw_data_update.shape[0]))
-print("final raw data shape is {}".format(raw_data_updated.shape))
+  print("{} shape before update".format(raw_data.shape[0]))
+  print("added {} rows of raw data".format(raw_data_update.shape[0]))
+  print("final raw data shape is {}".format(raw_data_updated.shape))
 
-#remove adds, which include words about damaged or non-functional cars
-bad_words = [" vadn", " rozbit", " havarovan", " poškozen", " špatn"]
-["bez poškození",  ]
-bad_index = []
+  #remove adds, which include words about damaged or non-functional cars
+  bad_words = [" vadn", " rozbit", " havarovan", " poškozen", " špatn"]
+  ["bez poškození",  ]
+  bad_index = []
 
-for word in bad_words:
-    bad_index_1 = raw_data_updated[raw_data_updated.detail.str.contains(word, case = False)].index
-    for index in bad_index_1:
-        bad_index.append(index)
+  for word in bad_words:
+      bad_index_1 = raw_data_updated[raw_data_updated.detail.str.contains(word, case = False)].index
+      for index in bad_index_1:
+          bad_index.append(index)
 
-bad_index = list(set(bad_index))
+  bad_index = list(set(bad_index))
 
-pd.set_option('display.max_colwidth', None)
-print("dropping wrong adds with words: ", bad_words)
-print(raw_data.loc[bad_index]["detail-href"])
+  pd.set_option('display.max_colwidth', None)
+  print("dropping wrong adds with words: ", bad_words)
+  print(raw_data.loc[bad_index]["detail-href"])
 
-#dropping useless columns:
-data_no_trash_columns = raw_data_updated.drop(['web-scraper-order', 'web-scraper-start-url', 
-                                              'detail-href', 'detail', 
-                                              'in_usage_from_year', 'additional_info', 
-                                              'price_info', 'gps', 'gps-href', 'warranty_until', 'euro_certification',
-                                              'first_owner', 'vin', 'add_id', 'add_id-href', 'seller_name'], axis = 1)
+  #dropping useless columns:
+  data_no_trash_columns = raw_data_updated.drop(['web-scraper-order', 'web-scraper-start-url', 
+                                                'detail-href', 'detail', 
+                                                'in_usage_from_year', 'additional_info', 
+                                                'price_info', 'gps', 'gps-href', 'warranty_until', 'euro_certification',
+                                                'first_owner', 'vin', 'add_id', 'add_id-href', 'seller_name'], axis = 1)
 
-# manually entered extras from web filter
-extras_ids_from_filters = ["ABS", "adaptivní tempomat", "asistent rozjezdu do kopce", "bezklíčkové ovládání", "bi-xenony", "bluetooth", 
-"centrální zamykání", "dálkové centrální zamykání", "el. ovládání oken", "el. ovládaný kufr", "ESP", 
-"hlídání mrtvého úhlu", "isofix", "kožené čalounění", "LED světlomety plnohodnotné", "litá kola", 
-"nezávislé topení", "odvětrávání sedadel", "palubní počítač", "panoramatická střecha", "parkovací asistent",
-"parkovací kamera", "parkovací senzory", "posilovač řízení", "satelitní navigace", "senzor stěračů",
-"sledování únavy řidiče", "Start/Stop systém", "střešní okno", "tažné zařízení", "tempomat", "USB", "vyhřívaná sedadla",
-"vyhřívané čelní sklo", "vyhřívaný volant", "xenony", "záruka"]
 
-def get_extras_from(cell):
-    # parse extras from cells from all car adverts.
-    parse_1 = cell.replace("[", "").replace("]", "").replace("{\"extras_list\":\"", "").replace("\"}", "")
-    extras_new = parse_1.split(",")
+  # manually entered extras from web filter
+  extras_ids_from_filters = ["ABS", "adaptivní tempomat", "asistent rozjezdu do kopce", "bezklíčkové ovládání", "bi-xenony", "bluetooth", 
+  "centrální zamykání", "dálkové centrální zamykání", "el. ovládání oken", "el. ovládaný kufr", "ESP", 
+  "hlídání mrtvého úhlu", "isofix", "kožené čalounění", "LED světlomety plnohodnotné", "litá kola", 
+  "nezávislé topení", "odvětrávání sedadel", "palubní počítač", "panoramatická střecha", "parkovací asistent",
+  "parkovací kamera", "parkovací senzory", "posilovač řízení", "satelitní navigace", "senzor stěračů",
+  "sledování únavy řidiče", "Start/Stop systém", "střešní okno", "tažné zařízení", "tempomat", "USB", "vyhřívaná sedadla",
+  "vyhřívané čelní sklo", "vyhřívaný volant", "xenony", "záruka"]
 
-    for extra in extras_new:
-        if extra not in extras_ids_from_filters:
-            extras_ids_from_filters.append(extra)
+  def get_extras_from(cell):
+      # parse extras from cells from all car adverts.
+      parse_1 = cell.replace("[", "").replace("]", "").replace("{\"extras_list\":\"", "").replace("\"}", "")
+      extras_new = parse_1.split(",")
 
-#add extras from car adverts to manually entered extras
-def extract_all_cells_with_extra(data):
-    for _, row in data.iterrows():
-        get_extras_from(row["extras_list"])
+      for extra in extras_new:
+          if extra not in extras_ids_from_filters:
+              extras_ids_from_filters.append(extra)
 
-extract_all_cells_with_extra(data_no_trash_columns)
+  #add extras from car adverts to manually entered extras
+  def extract_all_cells_with_extra(data):
+      for _, row in data.iterrows():
+          get_extras_from(row["extras_list"])
 
-extras_ids_from_filters.pop(0)
-extras_ids_from_filters.sort()
-extras_ids = extras_ids_from_filters.copy()
+  extract_all_cells_with_extra(data_no_trash_columns)
 
-#for each extra item create empty column with zeros
-zero_matrix = np.zeros((len(data_no_trash_columns), len(extras_ids)))
-extra_features_frame = pd.DataFrame(zero_matrix, index = None, columns = extras_ids)
+  extras_ids_from_filters.pop(0)
+  extras_ids_from_filters.sort()
+  extras_ids = extras_ids_from_filters.copy()
 
-data_no_trash_columns = pd.concat([data_no_trash_columns, extra_features_frame.reindex(data_no_trash_columns.index)], axis = 1)
-data_frame_extras = data_no_trash_columns.copy()
-print("create column for each extra")
-for index, row in tqdm(data_frame_extras.iterrows()):
-    row_content = np.str(row["extras_list"])
-    for extra_id_column in extras_ids:
-        if extra_id_column in row_content:
-            data_frame_extras.at[index, extra_id_column] = 1
+  #for each extra item create empty column with zeros
+  zero_matrix = np.zeros((len(data_no_trash_columns), len(extras_ids)))
+  extra_features_frame = pd.DataFrame(zero_matrix, index = None, columns = extras_ids)
 
-# setting pandas to use inf values as NA
-pd.set_option('mode.use_inf_as_na', True) 
+  data_no_trash_columns = pd.concat([data_no_trash_columns, extra_features_frame.reindex(data_no_trash_columns.index)], axis = 1)
+  data_frame_extras = data_no_trash_columns.copy()
+  print("create column for each extra")
+  for index, row in tqdm(data_frame_extras.iterrows()):
+      row_content = np.str(row["extras_list"])
+      for extra_id_column in extras_ids:
+          if extra_id_column in row_content:
+              data_frame_extras.at[index, extra_id_column] = 1
 
-data_frame_number_clean = data_frame_extras.copy()
+  # setting pandas to use inf values as NA
+  pd.set_option('mode.use_inf_as_na', True) 
 
-#milage
-data_frame_number_clean.milage = data_frame_number_clean.milage.map(lambda x: np.str(x).replace(" ", '').replace("\xa0", "").replace("mil", "").replace("km", "").strip())
+  data_frame_number_clean = data_frame_extras.copy()
 
-#price
-data_frame_number_clean.price = data_frame_number_clean.price.map(lambda x: np.str(x).replace(" ", '').replace("\xa0", "").strip())
+  #milage
+  data_frame_number_clean.milage = data_frame_number_clean.milage.map(lambda x: np.str(x).replace(" ", '').replace("\xa0", "").replace("mil", "").replace("km", "").strip())
 
-#ccm
-data_frame_number_clean.ccm = data_frame_number_clean.ccm.map(lambda x: np.str(x).replace(" ", '').replace("\xa0", "").replace('ccm', "").strip())
+  #price
+  data_frame_number_clean.price = data_frame_number_clean.price.map(lambda x: np.str(x).replace(" ", '').replace("\xa0", "").strip())
 
-#engine_power
-data_frame_number_clean.engine_power = data_frame_number_clean.engine_power.map(lambda x: np.str(x).replace(" ", '').replace("\xa0", "").split("kW")[0].strip())
+  #ccm
+  data_frame_number_clean.ccm = data_frame_number_clean.ccm.map(lambda x: np.str(x).replace(" ", '').replace("\xa0", "").replace('ccm', "").strip())
 
-#year
-data_frame_number_clean.year = data_frame_number_clean.year.map(lambda x: np.str(x).split("/")[-1].replace(" ", '').replace("\xa0", "").strip())
+  #engine_power
+  data_frame_number_clean.engine_power = data_frame_number_clean.engine_power.map(lambda x: np.str(x).replace(" ", '').replace("\xa0", "").split("kW")[0].strip())
 
-#stk
-data_frame_number_clean.stk = data_frame_number_clean.stk.map(lambda x: np.str(x).replace(" ", '').replace("\xa0", "").split("/")[-1].strip())
-data_frame_number_clean.milage = pd.to_numeric(data_frame_number_clean.milage, errors='coerce')
-data_frame_number_clean.price = pd.to_numeric(data_frame_number_clean.price, errors='coerce')
-data_frame_number_clean.engine_power = pd.to_numeric(data_frame_number_clean.engine_power, errors='coerce')
-data_frame_number_clean.year = pd.to_numeric(data_frame_number_clean.year, errors='coerce')
-data_frame_number_clean.stk = pd.to_numeric(data_frame_number_clean.stk, errors='coerce')
-data_frame_number_clean.ccm = pd.to_numeric(data_frame_number_clean.ccm, errors='coerce')
+  #year
+  data_frame_number_clean.year = data_frame_number_clean.year.map(lambda x: np.str(x).split("/")[-1].replace(" ", '').replace("\xa0", "").strip())
 
-data_frame_no_dupl = data_frame_number_clean.copy()
+  #stk
+  data_frame_number_clean.stk = data_frame_number_clean.stk.map(lambda x: np.str(x).replace(" ", '').replace("\xa0", "").split("/")[-1].strip())
+  data_frame_number_clean.milage = pd.to_numeric(data_frame_number_clean.milage, errors='coerce')
+  data_frame_number_clean.price = pd.to_numeric(data_frame_number_clean.price, errors='coerce')
+  data_frame_number_clean.engine_power = pd.to_numeric(data_frame_number_clean.engine_power, errors='coerce')
+  data_frame_number_clean.year = pd.to_numeric(data_frame_number_clean.year, errors='coerce')
+  data_frame_number_clean.stk = pd.to_numeric(data_frame_number_clean.stk, errors='coerce')
+  data_frame_number_clean.ccm = pd.to_numeric(data_frame_number_clean.ccm, errors='coerce')
 
-data_frame_no_dupl = data_frame_no_dupl.drop_duplicates(subset=['milage', 'year', 'price', 'engine_power'])
-data_frame_no_dupl = data_frame_no_dupl.replace([np.inf, -np.inf], np.nan)
+  data_frame_no_dupl = data_frame_number_clean.copy()
 
-print("dropping cars for less than 1000 Kc and oveer 5 mil Kc")
-data_price_more_5m = data_frame_no_dupl[lambda data: data.price > 5000000].index
-data_price_less_1k = data_frame_no_dupl[lambda data: data.price <= 1000].index
-data_frame_no_dupl = data_frame_no_dupl.drop(data_price_more_5m)
-data_frame_no_dupl = data_frame_no_dupl.drop(data_price_less_1k)
+  data_frame_no_dupl = data_frame_no_dupl.drop_duplicates(subset=['milage', 'year', 'price', 'engine_power'])
+  data_frame_no_dupl = data_frame_no_dupl.replace([np.inf, -np.inf], np.nan)
 
-print("dropping cars with power less than 5kW and more than 700kW")
-data_wrong_power = data_frame_no_dupl[lambda data: data.engine_power > 700].index
-data_frame_no_dupl = data_frame_no_dupl.drop(data_wrong_power)
-data_wrong_power = data_frame_no_dupl[lambda data: data.engine_power < 5].index
-data_frame_no_dupl = data_frame_no_dupl.drop(data_wrong_power)
+  print("dropping cars for less than 1000 Kc and oveer 5 mil Kc")
+  data_price_more_5m = data_frame_no_dupl[lambda data: data.price > 5000000].index
+  data_price_less_1k = data_frame_no_dupl[lambda data: data.price <= 1000].index
+  data_frame_no_dupl = data_frame_no_dupl.drop(data_price_more_5m)
+  data_frame_no_dupl = data_frame_no_dupl.drop(data_price_less_1k)
 
-print("droping cars older than 2020 with 0 milage")
-data_2020 = data_frame_no_dupl[lambda data: data.year < 2020]
-data_wrong_milage_indexes = data_2020[lambda data: data.milage <= 1].index
-data_frame_no_dupl = data_frame_no_dupl.drop(data_wrong_milage_indexes)
+  print("dropping cars with power less than 5kW and more than 700kW")
+  data_wrong_power = data_frame_no_dupl[lambda data: data.engine_power > 700].index
+  data_frame_no_dupl = data_frame_no_dupl.drop(data_wrong_power)
+  data_wrong_power = data_frame_no_dupl[lambda data: data.engine_power < 5].index
+  data_frame_no_dupl = data_frame_no_dupl.drop(data_wrong_power)
 
-print("dropping cars with milage over 700k")
-data_milage_over_700k = data_frame_no_dupl[lambda data: data.milage > 700000].index
-data_frame_no_dupl = data_frame_no_dupl.drop(data_milage_over_700k)
+  print("droping cars older than 2020 with 0 milage")
+  data_2020 = data_frame_no_dupl[lambda data: data.year < 2020]
+  data_wrong_milage_indexes = data_2020[lambda data: data.milage <= 1].index
+  data_frame_no_dupl = data_frame_no_dupl.drop(data_wrong_milage_indexes)
 
-print("dropping cars with ccm over 8k")
-data_ccm_more_8k = data_frame_no_dupl[lambda data: data.ccm > 8000].index
-data_frame_no_dupl = data_frame_no_dupl.drop(data_ccm_more_8k)
-data_frame_no_neuvedeno = data_frame_no_dupl.copy()
-for column in data_frame_no_neuvedeno.columns:
-    data_frame_no_neuvedeno.loc[(data_frame_no_neuvedeno[column] == 'neuvedeno'), column] = np.nan
+  print("dropping cars with milage over 700k")
+  data_milage_over_700k = data_frame_no_dupl[lambda data: data.milage > 700000].index
+  data_frame_no_dupl = data_frame_no_dupl.drop(data_milage_over_700k)
 
-#dropping rows without any extras, which is impossible
-print("dropping rows with zero extras")
-no_extras = 0
-for index, row in tqdm(data_frame_no_neuvedeno.iterrows()):
-        if row[extras_ids].sum() == 0:
-            data_frame_no_neuvedeno = data_frame_no_neuvedeno.drop(index)
+  print("dropping cars with ccm over 8k")
+  data_ccm_more_8k = data_frame_no_dupl[lambda data: data.ccm > 8000].index
+  data_frame_no_dupl = data_frame_no_dupl.drop(data_ccm_more_8k)
+  data_frame_no_neuvedeno = data_frame_no_dupl.copy()
+  for column in data_frame_no_neuvedeno.columns:
+      data_frame_no_neuvedeno.loc[(data_frame_no_neuvedeno[column] == 'neuvedeno'), column] = np.nan
 
-data_frame_training_ready = data_frame_no_neuvedeno.copy()
+  #dropping rows without any extras, which is impossible
+  print("dropping rows with zero extras")
+  no_extras = 0
+  for index, row in tqdm(data_frame_no_neuvedeno.iterrows()):
+          if row[extras_ids].sum() == 0:
+              data_frame_no_neuvedeno = data_frame_no_neuvedeno.drop(index)
 
-print("saving to CSV, preprocessed, shape: ", data_frame_training_ready.shape)
-data_frame_training_ready.to_csv ('/Users/jankolnik/Downloads/car_list_sauto_preprocessed_2.csv', index = False, header=True)
+  data_frame_training_ready = data_frame_no_neuvedeno.copy()
+
+  print("saving to CSV, preprocessed, shape: ", data_frame_training_ready.shape)
+  data_frame_training_ready.to_csv ('/Users/jankolnik/Downloads/car_list_sauto_preprocessed_2.csv', index = False, header=True)
+
 drop_nan = True               # use KNN imputer to impute num and cat values
 ccm_power = False              # new feature, ccm / power
 use_ordinal = True            # use ordinal values for  air_condition, service_book, car condition
-drop_year = 2011              # drop old cars with unreliable data
+drop_year = 2000              # drop old cars with unreliable data
 reduce_extras = False          # group extras to 10 options
 create_features = False        # creates some features combinating older ones and drops the old ones
 add_category = False           # add car category
-setup_for_NN = True
+setup_for_NN = False
 drop_wrong_power_ccm_combination = True
 
 if setup_for_NN:
@@ -194,6 +210,9 @@ else:
   is_sparse = True
   handle_skewed = True
 
+data_frame_training_ready = pd.read_csv('/Users/jankolnik/Downloads/car_list_sauto_preprocessed_2.csv')
+print("size of fresh CSV: ", data_frame_training_ready)
+
 extra_columns_random = data_frame_training_ready.columns[-162:-2]
 
 # drop old cars with unreliable data
@@ -201,19 +220,7 @@ print("dropping older cars than: ", drop_year)
 data_older_cars = data_frame_training_ready[lambda data: data.year < drop_year].index
 data_frame_training_ready = data_frame_training_ready.drop(data_older_cars)
 
-print("reducing extras to 4 categories")
-if reduce_extras:
-        for index, row in tqdm(data_frame_training_ready.iterrows()):
-            total_extras = row[extra_columns_random].sum()
-            
-            if 0 <= total_extras <= 35:
-                data_frame_training_ready.loc[index,'extra_category'] = 1
-            if 36 <= total_extras <= 70:
-                data_frame_training_ready.loc[index,'extra_category'] = 2
-            if 71 <= total_extras <= 105:
-                data_frame_training_ready.loc[index,'extra_category'] = 3
-            if total_extras >= 106:
-                data_frame_training_ready.loc[index,'extra_category'] = 4
+
 
 print("adding car_category to each row")
 luxury_brand = ['Jaguar','Mercedes-Benz','BMW',  'Audi', 'Volvo', 'Subaru','Porsche',
@@ -231,22 +238,13 @@ cheap_brand = ['Dacia','Fiat', 'Renault','Seat', 'Kia','Citroën','Mitsubishi','
                'Daewoo','Isuzu', 'Lancia','Ligier', 'SsangYong','Aixam','Daihatsu','Lada','Great Wall','MG',
               'Casalini','Chatenet']
 
-if add_category:
-  print("addding car category: ")
-  for index, row in tqdm(data_frame_training_ready.iterrows()):
-      if row.car_brand in luxury_brand:
-          data_frame_training_ready.loc[index,'car_category'] = 2
-      if row.car_brand in middle_brand:
-          data_frame_training_ready.loc[index,'car_category'] = 1
-      if row.car_brand in cheap_brand:
-          data_frame_training_ready.loc[index,'car_category'] = 0
 
 data_frame_training_ready = data_frame_training_ready.drop(data_frame_training_ready[lambda data: data.car_brand == 'Ostatní'].index)
 
 #change milage to 1, so years can be divided by it
 data_frame_training_ready.loc[data_frame_training_ready['milage'] == 0, 'milage'] = 1
 #years will only be fro 1 to 11
-data_frame_training_ready.loc[data_frame_training_ready['year'] != np.nan, 'year'] = data_frame_training_ready['year'] - 2009
+data_frame_training_ready.loc[data_frame_training_ready['year'] != np.nan, 'year'] = data_frame_training_ready['year'] - 2000
 
 if create_features:        
     # num_columns = num_columns + ['pcm', 'drs_ppl', 'air_ppl', 'y_m']
@@ -347,6 +345,7 @@ X_test_cat = X_test[cat_columns]
 X_test_num = X_test[num_columns]
 
 num_pipeline = make_pipeline(
+            Normalizer(),
             RobustScaler()
         )
 
@@ -417,10 +416,10 @@ clf = MLPRegressor(solver='adam', alpha=0.01,
                     validation_fraction = 0.1, early_stopping = True)
 
 
-
 clf.fit(X_train_final, y_train.values)
 
 test_result(clf, 300)
+
 
 # class CustomCallbacs():
 #   earlyStop = tf.keras.callbacks.EarlyStopping(patience = 5, restore_best_weights = True, monitor='val_loss')

@@ -209,29 +209,29 @@ function load_data_to_list(elementID, data, sort) {
 }
 
 function set_test_values() {
-	document.getElementById("car_brand_list").value= "Audi"
-	document.getElementById("car_brand_list").text= "Audi"
+	document.getElementById("car_brand_list").value= "Volkswagen"
+	document.getElementById("car_brand_list").text= "Volkswagen"
 
-	document.getElementById("car_model_list").value = "A5"
-	document.getElementById("car_model_list").text = "A5"
+	document.getElementById("car_model_list").value = "Golf"
+	document.getElementById("car_model_list").text = "Golf"
 
 	document.getElementById("car_type_list").value = "hatchback"
 	document.getElementById("car_type_list").text = "hatchback"
 
-	document.getElementById("book").value = "ano"
-	document.getElementById("book").text = "Ano"
+	document.getElementById("book").value = "ne"
+	document.getElementById("book").text = "Ne"
 
 	document.getElementById("condition").value = "ojeté"
 	document.getElementById("condition").text = "Ojeté"
 
-	document.getElementById("year").value = 2015
-	document.getElementById("year").text = 2015
+	document.getElementById("year").value = 2008
+	document.getElementById("year").text = 2008
 
-	document.getElementById("milage").value = 150000
-	document.getElementById("milage").text = 150000
+	document.getElementById("milage").value = 285000
+	document.getElementById("milage").text = 285000
 
-	document.getElementById("engine_power").value = 90
-	document.getElementById("engine_power").text = 90
+	document.getElementById("engine_power").value = 74
+	document.getElementById("engine_power").text = 74
 
 	document.getElementById("car_fuel_list").value = "nafta"
 	document.getElementById("car_fuel_list").text = "nafta"
@@ -245,6 +245,6 @@ function set_test_values() {
 	document.getElementById("transmission_list").value = "manuální"
 	document.getElementById("transmission_list").text = "manuální"
 
-	document.getElementById("country_list").value = "Belgie"
-	document.getElementById("country_list").text = "Belgie"
+	document.getElementById("country_list").value = "Česká republika"
+	document.getElementById("country_list").text = "Česká republika"
 }

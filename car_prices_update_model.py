@@ -74,48 +74,7 @@ if yes_no("update model? y/n: "):
                                                 'price_info', 'gps', 'gps-href', 'warranty_until', 'euro_certification',
                                                 'first_owner', 'vin', 'add_id', 'add_id-href', 'seller_name'], axis = 1)
 
-
-  # manually entered extras from web filter
-  extras_ids_from_filters = ["ABS", "adaptivní tempomat", "asistent rozjezdu do kopce", "bezklíčkové ovládání", "bi-xenony", "bluetooth", 
-  "centrální zamykání", "dálkové centrální zamykání", "el. ovládání oken", "el. ovládaný kufr", "ESP", 
-  "hlídání mrtvého úhlu", "isofix", "kožené čalounění", "LED světlomety plnohodnotné", "litá kola", 
-  "nezávislé topení", "odvětrávání sedadel", "palubní počítač", "panoramatická střecha", "parkovací asistent",
-  "parkovací kamera", "parkovací senzory", "posilovač řízení", "satelitní navigace", "senzor stěračů",
-  "sledování únavy řidiče", "Start/Stop systém", "střešní okno", "tažné zařízení", "tempomat", "USB", "vyhřívaná sedadla",
-  "vyhřívané čelní sklo", "vyhřívaný volant", "xenony", "záruka"]
-
-  def get_extras_from(cell):
-      # parse extras from cells from all car adverts.
-      parse_1 = cell.replace("[", "").replace("]", "").replace("{\"extras_list\":\"", "").replace("\"}", "")
-      extras_new = parse_1.split(",")
-
-      for extra in extras_new:
-          if extra not in extras_ids_from_filters:
-              extras_ids_from_filters.append(extra)
-
-  #add extras from car adverts to manually entered extras
-  def extract_all_cells_with_extra(data):
-      for _, row in data.iterrows():
-          get_extras_from(row["extras_list"])
-
-  extract_all_cells_with_extra(data_no_trash_columns)
-
-  extras_ids_from_filters.pop(0)
-  extras_ids_from_filters.sort()
-  extras_ids = extras_ids_from_filters.copy()
-
-  #for each extra item create empty column with zeros
-  zero_matrix = np.zeros((len(data_no_trash_columns), len(extras_ids)))
-  extra_features_frame = pd.DataFrame(zero_matrix, index = None, columns = extras_ids)
-
-  data_no_trash_columns = pd.concat([data_no_trash_columns, extra_features_frame.reindex(data_no_trash_columns.index)], axis = 1)
   data_frame_extras = data_no_trash_columns.copy()
-  print("create column for each extra")
-  for index, row in tqdm(data_frame_extras.iterrows()):
-      row_content = np.str(row["extras_list"])
-      for extra_id_column in extras_ids:
-          if extra_id_column in row_content:
-              data_frame_extras.at[index, extra_id_column] = 1
 
   # setting pandas to use inf values as NA
   pd.set_option('mode.use_inf_as_na', True) 
@@ -153,7 +112,7 @@ if yes_no("update model? y/n: "):
 
   print("dropping cars for less than 1000 Kc and oveer 5 mil Kc")
   data_price_more_5m = data_frame_no_dupl[lambda data: data.price > 5000000].index
-  data_price_less_1k = data_frame_no_dupl[lambda data: data.price <= 1000].index
+  data_price_less_1k = data_frame_no_dupl[lambda data: data.price <= 5000].index
   data_frame_no_dupl = data_frame_no_dupl.drop(data_price_more_5m)
   data_frame_no_dupl = data_frame_no_dupl.drop(data_price_less_1k)
 
@@ -178,13 +137,6 @@ if yes_no("update model? y/n: "):
   data_frame_no_neuvedeno = data_frame_no_dupl.copy()
   for column in data_frame_no_neuvedeno.columns:
       data_frame_no_neuvedeno.loc[(data_frame_no_neuvedeno[column] == 'neuvedeno'), column] = np.nan
-
-  #dropping rows without any extras, which is impossible
-  print("dropping rows with zero extras")
-  no_extras = 0
-  for index, row in tqdm(data_frame_no_neuvedeno.iterrows()):
-          if row[extras_ids].sum() == 0:
-              data_frame_no_neuvedeno = data_frame_no_neuvedeno.drop(index)
 
   data_frame_training_ready = data_frame_no_neuvedeno.copy()
 
@@ -213,9 +165,9 @@ data_frame_training_ready.loc[data_frame_training_ready['milage'] == 0, 'milage'
 data_frame_training_ready.loc[data_frame_training_ready['year'] != np.nan, 'year'] = data_frame_training_ready['year'] - 2000
 
 #dropping older cars with way to low milage
-# older_cars = data_frame_training_ready[lambda data: data.year < 8].index
-# old_and_low_milage = data_frame_training_ready.loc[older_cars][lambda data: data.milage < 6000].index
-# data_frame_training_ready = data_frame_training_ready.drop(old_and_low_milage)
+older_cars = data_frame_training_ready[lambda data: data.year < 8].index
+old_and_low_milage = data_frame_training_ready.loc[older_cars][lambda data: data.milage < 600].index
+data_frame_training_ready = data_frame_training_ready.drop(old_and_low_milage)
 
 print("using ordinal on service_book, air_condition, condition")
 data_frame_training_ready.air_condition = data_frame_training_ready.air_condition.replace(['bez klimatizace'], 0)
@@ -335,16 +287,16 @@ def test_result(model, n_tests):
     text_file.write("\n{}  {}".format(today, final_log))
 
 
-clf = MLPRegressor(solver='adam', alpha=0.001, learning_rate_init=0.001, 
+clf = MLPRegressor(solver='adam', alpha=0.001, learning_rate_init=0.001,
                     hidden_layer_sizes=(20, 300), random_state=42, 
-                    batch_size= 32, verbose = True, max_iter = 500,
+                    batch_size= 8, verbose = True, max_iter = 500,
                     learning_rate = 'adaptive', warm_start=True,
                     validation_fraction = 0.1, early_stopping = True)
 
 
 clf.fit(X_train_final, y_train.values)
 
-test_result(clf, 300)
+test_result(clf, 1000)
 
 
 # def load_model():
