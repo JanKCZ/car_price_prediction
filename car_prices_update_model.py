@@ -13,6 +13,7 @@ from sklearn.pipeline import make_pipeline, Pipeline
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error as mse
 from sklearn.compose import ColumnTransformer
+from sklearn.ensemble import BaggingRegressor
 import sklearn
 import math
 from sklearn.neural_network import MLPRegressor
@@ -21,6 +22,7 @@ from sklearn.neural_network import MLPRegressor
 from tqdm import tqdm
 import joblib
 from datetime import datetime
+import matplotlib.pyplot as plt
 
 def yes_no(answer):
   user_input = input(answer)
@@ -288,15 +290,17 @@ def test_result(model, n_tests):
 
 
 clf = MLPRegressor(solver='adam', alpha=0.001, learning_rate_init=0.001,
-                    hidden_layer_sizes=(20, 300), random_state=42, 
-                    batch_size= 8, verbose = True, max_iter = 500,
+                    hidden_layer_sizes=(20, 300), random_state=42,
+                    batch_size= 32, verbose = True, max_iter = 500,
                     learning_rate = 'adaptive', warm_start=True,
                     validation_fraction = 0.1, early_stopping = True)
 
 
 clf.fit(X_train_final, y_train.values)
 
-test_result(clf, 1000)
+test_result(clf, 300)
+
+
 
 
 # def load_model():

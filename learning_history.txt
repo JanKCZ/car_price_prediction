@@ -51,3 +51,7 @@
 2021-02-09 11:34:31.651993  average error:   13.11%, median error:    9.32%, absolute error:   75410, score:   0.963, max error:  232.94%, set size: 89819
 2021-02-09 11:42:32.096206  average error:   12.46%, median error:    8.62%, absolute error:   76595, score:   0.961, max error:  180.23%, set size: 89819
 2021-02-09 11:57:56.753479  average error:   12.44%, median error:    8.87%, absolute error:   75410, score:   0.963, max error:  232.94%, set size: 89819
+2021-02-09 21:45:11.545637  average error:   12.35%, median error:    8.62%, absolute error:   75121, score:   0.963, max error:  204.03%, set size: 89819
+2021-02-09 22:06:11.595925  average error:   13.90%, median error:   10.03%, absolute error:   77272, score:   0.961, max error:  140.80%, set size: 89819
+2021-02-09 22:17:56.613678  average error:   12.83%, median error:    8.92%, absolute error:   75898, score:   0.962, max error:  198.06%, set size: 89819
+2021-02-09 22:27:51.642851  average error:   12.61%, median error:    8.75%, absolute error:   76008, score:   0.962, max error:  195.15%, set size: 89819

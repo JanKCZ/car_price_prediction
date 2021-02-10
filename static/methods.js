@@ -158,9 +158,9 @@ function passParametres() {
 	var country_list = document.getElementById("country_list")
 	var country = country_list.options[country_list.selectedIndex].text
 	document.getElementById("country_input").value = country
-	param_list.push(country)
+	param_list.push(country);
 
-	console.log(param_list)
+	console.log(param_list);
 	return param_list
 }
 

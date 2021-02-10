@@ -42,7 +42,7 @@
 	<header>
 		<center>
 			<h1>
-				Odhad tržní ceny automobilu
+				<u style="text-decoration-thickness: 1px; text-underline-offset: 10px;">Odhad tržní ceny automobilu</u>
 			</h1>
 		</center>
 			<b1 id="headline_text">
@@ -158,7 +158,7 @@
 	<br>
 	<center>
 	<!-- for TEST env only, comment-out before pushing to master -->
-	<!-- <button type="button" class="btn btn-primary btn-sm" onclick="set_test_values()">fill values</button> -->
+	<button type="button" class="btn btn-primary btn-sm" onclick="set_test_values()">fill values</button>
 	<div class="login">
     <form action="{{ url_for('predict')}}"method="POST" onsubmit="return checkParametres()">
     	<input id = "car_brand_input" type = "hidden" name = "car_brand_input" value = "" />
@@ -174,21 +174,7 @@
     	<input id = "country_input" type = "hidden" name = "country_input" value = "" />
 		<input id = "engine_power_input" type = "hidden" name = "engine_power_input" value = "" />
 		<input id = "milage_input" type = "hidden" name = "milage_input" value = "" />
-		<button type="submit" class="btn btn-primary btn-lg" id="submitBtn" onclick="data = passParametres(); dataLayer.push({
-			'test_key':'test_value',
-			'car_brand': data[0],
-			'car_model': data[1],
-			'type': data[2],
-			'service_book': data[3],
-			'condition': data[4],
-			'year': data[5],
-			'milage': data[6],
-			'engine_power': data[7],
-			'fuell': data[8],
-			'n_doors': data[9],
-			'aircondition': data[10],
-			'transmission': data[11],
-			'country': data[12]})"
+		<button type="submit" class="btn btn-primary btn-lg" id="submitBtn" onclick="console_print()"
 		style="background-color: rgb(14, 110, 143); border-color: rgb(14, 110, 143); width: 300px; font-size: 25px;">Odhadnout cenu</button>
 		<br><br>
     </form>
@@ -276,6 +262,25 @@
 				"selected_car_brand":car_brand
 			});
 		})
+
+		function console_print() {
+			data = passParametres(); 
+			dataLayer.push({
+			'test_key':'test_value',
+			'car_brand': data[0],
+			'car_model': data[1],
+			'type': data[2],
+			'service_book': data[3],
+			'condition': data[4],
+			'year': data[5],
+			'milage': data[6],
+			'engine_power': data[7],
+			'fuell': data[8],
+			'n_doors': data[9],
+			'aircondition': data[10],
+			'transmission': data[11],
+			'country': data[12]});
+		}
 
 		add_listeners_color("condition");
 		add_listeners_color("car_model_list");
