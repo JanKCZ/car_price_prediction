@@ -45,6 +45,7 @@ if yes_no("update model? y/n: "):
 
   #drop duplicated adds
   raw_data_updated = raw_data_updated.drop_duplicates(subset=['add_id-href'])
+  raw_data = raw_data.reset_index(drop=True)
 
   #save to CSV
   raw_data_updated.to_csv('/Users/jankolnik/Downloads/car_list_all_v1_updated_sauto.csv', index = False, header=True)
@@ -54,20 +55,28 @@ if yes_no("update model? y/n: "):
   print("final raw data shape is {}".format(raw_data_updated.shape))
 
   #remove adds, which include words about damaged or non-functional cars
-  bad_words = [" vadn", " rozbit", " havarovan", " poškozen", " špatn"]
-  ["bez poškození",  ]
+  bad_words = [" vadný", " vadné", " rozbit", " havarovan", " poškozen", " špatn", "nepojízd", " bourané"]
+  good_words = ["bez poškození", "žádné poškození", "nemá poškození", "není poškozen"]
   bad_index = []
 
-  for word in bad_words:
-      bad_index_1 = raw_data_updated[raw_data_updated.detail.str.contains(word, case = False)].index
-      for index in bad_index_1:
-          bad_index.append(index)
+  not_nan = raw_data[raw_data.additional_info.notnull()]
 
-  bad_index = list(set(bad_index))
+  for word in bad_words:
+    bad_words_index = not_nan[not_nan.additional_info.str.contains(word, case = False)].index
+    for index in bad_words_index:
+      if index not in bad_index:
+        bad_index.append(index)
+
+  for word in bad_words:
+    bad_words_index = raw_data[raw_data.detail.str.contains(word, case = False)].index
+    for index in bad_words_index:
+      if index not in bad_index:
+        bad_index.append(index)
+
+  raw_data_updated = raw_data_updated.drop(bad_index)
 
   pd.set_option('display.max_colwidth', None)
   print("dropping wrong adds with words: ", bad_words)
-  print(raw_data.loc[bad_index]["detail-href"])
 
   #dropping useless columns:
   data_no_trash_columns = raw_data_updated.drop(['web-scraper-order', 'web-scraper-start-url', 
@@ -260,17 +269,12 @@ def test_result(model, n_tests):
     for sample in range(n_tests):
         prediction = model.predict(X_test_final)[sample]
         y_real_value = y_test.iloc[sample]
-        if not create_features:
-          milage = X_test.iloc[sample]['milage']
-          engine_power = X_test.iloc[sample]['engine_power']
-          year = X_test.iloc[sample]['year']
-        else:
-          country = X_test.iloc[sample]['country_from']
-          trans = X_test.iloc[sample]['transmission']
-          fuell = X_test.iloc[sample]['fuell']
-          milage = X_test.iloc[sample]['milage']
-          engine_power = X_test.iloc[sample]['engine_power']
-          year = X_test.iloc[sample]['year']
+        country = X_test.iloc[sample]['country_from']
+        trans = X_test.iloc[sample]['transmission']
+        fuell = X_test.iloc[sample]['fuell']
+        milage = X_test.iloc[sample]['milage']
+        engine_power = X_test.iloc[sample]['engine_power']
+        year = X_test.iloc[sample]['year']
 
         brand = X_test.iloc[sample]['car_brand']
         car_model = X_test.iloc[sample]['car_model']
@@ -278,10 +282,7 @@ def test_result(model, n_tests):
         error_percentage = ((-(y_real_value - prediction)/y_real_value) * 100)
         sum_errors.append(np.absolute(error_percentage))
         max_error = max(sum_errors)
-        if not create_features:
-          print("prediction: {:7.0f},  real price: {:7.0f},  percent error: {:6.2f}%, milage: {:7.0f}, power: {:4.0f}, year: {:4.0f}".format(prediction, y_real_value, error_percentage, milage, engine_power, year))
-        else:
-          print("prediction: {:7.0f},  real price: {:7.0f},  percent error: {:6.2f}%, country: {:20}, trans: {:20}, fuell: {:10}, brand: {:15}, model: {}".format(prediction, y_real_value, error_percentage, country, trans, fuell, brand, car_model))
+        print("prediction: {:7.0f},  real price: {:7.0f},  percent error: {:6.2f}%, country: {:20}, trans: {:20}, fuell: {:10}, brand: {:15}, model: {}".format(prediction, y_real_value, error_percentage, country, trans, fuell, brand, car_model))
 
     final_log = 'average error: {:7.2f}%, median error: {:7.2f}%, absolute error: {:7.0f}, score: {:7.3f}, max error: {:7.2f}%, set size: {}'.format(np.mean(sum_errors), np.median(sum_errors), nn_rmse, score, max_error, data_frame_training_ready_no_nan.shape[0])
     print(final_log)
