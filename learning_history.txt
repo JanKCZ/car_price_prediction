@@ -67,3 +67,4 @@
 2021-02-17 16:05:32.341098  average error:   12.46%, median error:    8.74%, absolute error:  702543, score:  -2.149, max error:  158.76%, set size: 94521
 2021-02-17 16:10:37.086426  average error:   13.70%, median error:    8.88%, absolute error:   80657, score:   0.960, max error:  206.78%, set size: 87894
 2021-02-17 16:15:17.412185  average error:   11.73%, median error:    8.27%, absolute error:   71790, score:   0.966, max error:   85.60%, set size: 89744
+2021-02-17 17:12:11.661519  average error:   11.73%, median error:    8.27%, absolute error:   71790, score:   0.966, max error:   85.60%, set size: 89744

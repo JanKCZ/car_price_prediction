@@ -283,7 +283,7 @@ def test_result(model, n_tests):
         error_percentage = ((-(y_real_value - prediction)/y_real_value) * 100)
         sum_errors.append(np.absolute(error_percentage))
         max_error = max(sum_errors)
-        print("pred: {:7.0f}, real: {:7.0f}, err.rate: {:6.2f}%, country: {:16}, trans: {:13}, fuell: {:8}, model: {:15} {:13}, year: {:4}, milage: {:6.0f}, pwr: {0f}".format(prediction, y_real_value, error_percentage, country, trans, fuell, brand, car_model, year, milage, engine_power))
+        print("pred: {:7.0f}, real: {:7.0f}, err.rate: {:6.2f}%, country: {:16}, trans: {:13}, fuell: {:8}, model: {:15} {:13}, year: {:4}, milage: {:6.0f}, pwr: {:.0f}".format(prediction, y_real_value, error_percentage, country, trans, fuell, brand, car_model, year, milage, engine_power))
 
     final_log = 'average error: {:7.2f}%, median error: {:7.2f}%, absolute error: {:7.0f}, score: {:7.3f}, max error: {:7.2f}%, set size: {}'.format(np.mean(sum_errors), np.median(sum_errors), nn_rmse, score, max_error, data_frame_training_ready_no_nan.shape[0])
     print(final_log)

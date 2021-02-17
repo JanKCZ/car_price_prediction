@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-	<!-- Global site tag (gtag.js) - Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=G-NF6KVBFX79"></script>
+	<!-- Google Analytics -->
 	<script>
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-
-	gtag('config', 'G-NF6KVBFX79');
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	
+	ga('create', 'NF6KVBFX79', 'auto');
+	ga('send', 'pageview');
 	</script>
+	<!-- End Google Analytics -->
 	<meta name="description" content="Na této stránce odhadujeme standardní cenu automobilu na trhu s využitím neuronové sítě. Neuronová síť je forma strojového učení, která umožnila prozkoumat více jak 90 tisíc inzerátů automobilů. 
 	Pomocí těchto dat bylo vytvořeno spolehlivé srovnání ceny automobilu s podobnými automobily.">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,17 +24,6 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 </head>
 <body>
-	<!-- Custom tracking evenets -->
-	<script>
-		dataLayer = [{
-		  'pageCategory': 'signup',
-		  'visitorType': 'high-value'
-		}];
-	</script>
-	<!-- Google Tag Manager (noscript) -->
-	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-NF6KVBFX79"
-	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-	<!-- End Google Tag Manager (noscript) -->
 	<div class="container">
 		<br>
 	<header>
@@ -170,7 +161,7 @@
     	<input id = "country_input" type = "hidden" name = "country_input" value = "" />
 		<input id = "engine_power_input" type = "hidden" name = "engine_power_input" value = "" />
 		<input id = "milage_input" type = "hidden" name = "milage_input" value = "" />
-		<button type="submit" class="btn btn-primary btn-lg" id="submitBtn" onclick="console_print()"
+		<button type="submit" class="btn btn-primary btn-lg" id="submitBtn" onclick="log_to_ga()"
 		style="background-color: rgb(14, 110, 143); border-color: rgb(14, 110, 143); width: 300px; font-size: 25px;">Odhadnout cenu</button>
 		<br><br>
     </form>
@@ -259,23 +250,13 @@
 			});
 		})
 
-		function console_print() {
-			data = passParametres(); 
-			dataLayer.push({
-			'test_key':'test_value',
-			'car_brand': data[0],
-			'car_model': data[1],
-			'type': data[2],
-			'service_book': data[3],
-			'condition': data[4],
-			'year': data[5],
-			'milage': data[6],
-			'engine_power': data[7],
-			'fuell': data[8],
-			'n_doors': data[9],
-			'aircondition': data[10],
-			'transmission': data[11],
-			'country': data[12]});
+		function log_to_ga() {
+			ga('send', 'event', 'test_pred_action', "test_prediction_value")
+			var predSpec = ""
+			predSpec.concat(data[0], ";", data[1], ";", data[2], ";", data[3], ";", data[4], ";", data[5], ";", data[6], ";", 
+			data[7], ";", data[8], ";", data[9], ";", data[10], ";", data[11], ";", data[12])
+
+			ga('send', 'event', 'Prediction', predSpec)
 		}
 
 		add_listeners_color("condition");
