@@ -145,6 +145,7 @@ if yes_no("update model? y/n: "):
   print("dropping cars with ccm over 8k")
   data_ccm_more_8k = data_frame_no_dupl[lambda data: data.ccm > 8000].index
   data_frame_no_dupl = data_frame_no_dupl.drop(data_ccm_more_8k)
+
   data_frame_no_neuvedeno = data_frame_no_dupl.copy()
   for column in data_frame_no_neuvedeno.columns:
       data_frame_no_neuvedeno.loc[(data_frame_no_neuvedeno[column] == 'neuvedeno'), column] = np.nan
@@ -223,12 +224,12 @@ data_frame_training_ready = data_frame_training_ready.drop(ccm_1000_power_20)
 important_columns = num_columns + cat_columns
 
 print("size before NAN drop: ", data_frame_training_ready.shape)
-if drop_nan:
-  data_frame_training_ready_no_nan = data_frame_training_ready[important_columns + ['price']].dropna()
-else:
-  data_frame_training_ready_no_nan = data_frame_training_ready[important_columns + ['price']]
-
+data_frame_training_ready_no_nan = data_frame_training_ready[important_columns + ['price']].dropna()
 print("size after dropping NAN: ", data_frame_training_ready_no_nan.shape)
+
+print("size before droping inf: ", data_frame_training_ready_no_nan.shape)
+data_frame_training_ready_no_nan = data_frame_training_ready_no_nan.dropna(axis=0, how='any', thresh=None, subset=None, inplace=False)
+print("size after droping inf", data_frame_training_ready_no_nan.shape)
 
 data_frame_training_ready_no_nan[cat_columns] = data_frame_training_ready_no_nan[cat_columns].astype(np.str)
 
@@ -282,7 +283,7 @@ def test_result(model, n_tests):
         error_percentage = ((-(y_real_value - prediction)/y_real_value) * 100)
         sum_errors.append(np.absolute(error_percentage))
         max_error = max(sum_errors)
-        print("prediction: {:7.0f},  real price: {:7.0f},  percent error: {:6.2f}%, country: {:20}, trans: {:20}, fuell: {:10}, brand: {:15}, model: {}".format(prediction, y_real_value, error_percentage, country, trans, fuell, brand, car_model))
+        print("pred: {:7.0f}, real: {:7.0f}, err.rate: {:6.2f}%, country: {:16}, trans: {:13}, fuell: {:8}, model: {:15} {:13}, year: {:4}, milage: {:6.0f}, pwr: {0f}".format(prediction, y_real_value, error_percentage, country, trans, fuell, brand, car_model, year, milage, engine_power))
 
     final_log = 'average error: {:7.2f}%, median error: {:7.2f}%, absolute error: {:7.0f}, score: {:7.3f}, max error: {:7.2f}%, set size: {}'.format(np.mean(sum_errors), np.median(sum_errors), nn_rmse, score, max_error, data_frame_training_ready_no_nan.shape[0])
     print(final_log)
@@ -291,7 +292,7 @@ def test_result(model, n_tests):
 
 
 clf = MLPRegressor(solver='adam', alpha=0.001, learning_rate_init=0.001,
-                    hidden_layer_sizes=(20, 300), random_state=42,
+                    hidden_layer_sizes=(20, 400), random_state=42,
                     batch_size= 32, verbose = True, max_iter = 500,
                     learning_rate = 'adaptive', warm_start=True,
                     validation_fraction = 0.1, early_stopping = True)
