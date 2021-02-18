@@ -55,7 +55,8 @@ if yes_no("update model? y/n: "):
   print("final raw data shape is {}".format(raw_data_updated.shape))
 
   #remove adds, which include words about damaged or non-functional cars
-  bad_words = [" vadný", " vadné", " rozbit", " havarovan", " poškozen", " špatn", "nepojízd", " bourané"]
+  bad_words = [" vadný", " vadné", " rozbit", " havarovan", " poškozen", "špatn", "nepojízd", 
+  " bourané", "kosmetick", "dodělaní", "na náhradní díly", "porucha", " porouchan"]
   good_words = ["bez poškození", "žádné poškození", "nemá poškození", "není poškozen"]
   bad_index = []
 
@@ -80,10 +81,10 @@ if yes_no("update model? y/n: "):
 
   #dropping useless columns:
   data_no_trash_columns = raw_data_updated.drop(['web-scraper-order', 'web-scraper-start-url', 
-                                                'detail-href', 'detail', 
-                                                'in_usage_from_year', 'additional_info', 
+                                                'detail-href', 
+                                                'in_usage_from_year', 
                                                 'price_info', 'gps', 'gps-href', 'warranty_until', 'euro_certification',
-                                                'first_owner', 'vin', 'add_id', 'add_id-href', 'seller_name'], axis = 1)
+                                                'first_owner', 'vin', 'add_id', 'seller_name'], axis = 1)
 
   data_frame_extras = data_no_trash_columns.copy()
 
@@ -121,9 +122,9 @@ if yes_no("update model? y/n: "):
   data_frame_no_dupl = data_frame_no_dupl.drop_duplicates(subset=['milage', 'year', 'price', 'engine_power'])
   data_frame_no_dupl = data_frame_no_dupl.replace([np.inf, -np.inf], np.nan)
 
-  print("dropping cars for less than 1000 Kc and oveer 5 mil Kc")
+  print("dropping cars for less than 10000 Kc and oveer 5 mil Kc")
   data_price_more_5m = data_frame_no_dupl[lambda data: data.price > 5000000].index
-  data_price_less_1k = data_frame_no_dupl[lambda data: data.price <= 5000].index
+  data_price_less_1k = data_frame_no_dupl[lambda data: data.price <= 10000].index
   data_frame_no_dupl = data_frame_no_dupl.drop(data_price_more_5m)
   data_frame_no_dupl = data_frame_no_dupl.drop(data_price_less_1k)
 
@@ -283,7 +284,7 @@ def test_result(model, n_tests):
         error_percentage = ((-(y_real_value - prediction)/y_real_value) * 100)
         sum_errors.append(np.absolute(error_percentage))
         max_error = max(sum_errors)
-        print("pred: {:7.0f}, real: {:7.0f}, err.rate: {:6.2f}%, country: {:16}, trans: {:13}, fuell: {:8}, model: {:15} {:13}, year: {:4}, milage: {:6.0f}, pwr: {:.0f}".format(prediction, y_real_value, error_percentage, country, trans, fuell, brand, car_model, year, milage, engine_power))
+        print("pred: {:7.0f}, real: {:7.0f}, err.rate: {:6.2f}%, country: {:16}, trans: {:13}, fuell: {:8}, br: {:15}, md: {:13}, year: {:4}, milage: {:6.0f}, pwr: {:.0f}".format(prediction, y_real_value, error_percentage, country, trans, fuell, brand, car_model, year, milage, engine_power))
 
     final_log = 'average error: {:7.2f}%, median error: {:7.2f}%, absolute error: {:7.0f}, score: {:7.3f}, max error: {:7.2f}%, set size: {}'.format(np.mean(sum_errors), np.median(sum_errors), nn_rmse, score, max_error, data_frame_training_ready_no_nan.shape[0])
     print(final_log)
