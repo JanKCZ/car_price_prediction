@@ -56,23 +56,29 @@ if yes_no("update model? y/n: "):
 
   #remove adds, which include words about damaged or non-functional cars
   bad_words = [" vadný", " vadné", " rozbit", " havarovan", " poškozen", "špatn", "nepojízd", 
-  " bourané", "kosmetick", "dodělaní", "na náhradní díly", "porucha", " porouchan"]
-  good_words = ["bez poškození", "žádné poškození", "nemá poškození", "není poškozen"]
+  " bourané", " bouraný", "koroze", "kosmetick", "dodělaní", "na náhradní díly", "porucha", " porouchan", "KO!",
+  "drobné závady", "závady", "oděrky", "zreziv", "rezav", "přetržený"]
+  good_words = ["bez poškození", "žádné poškození", "nemá poškození", "není poškozen", "bez koroze", 
+  "žádné závady", "bez závad", "žádné závady"]
   bad_index = []
 
   not_nan = raw_data[raw_data.additional_info.notnull()]
 
   for word in bad_words:
     bad_words_index = not_nan[not_nan.additional_info.str.contains(word, case = False)].index
-    for index in bad_words_index:
-      if index not in bad_index:
-        bad_index.append(index)
+    for good in good_words:
+      if good not in bad_words_index:
+        for index in bad_words_index:
+          if index not in bad_index:
+            bad_index.append(index)
 
   for word in bad_words:
     bad_words_index = raw_data[raw_data.detail.str.contains(word, case = False)].index
-    for index in bad_words_index:
-      if index not in bad_index:
-        bad_index.append(index)
+    for good in good_words:
+      if good not in bad_words_index:
+        for index in bad_words_index:
+          if index not in bad_index:
+            bad_index.append(index)
 
   raw_data_updated = raw_data_updated.drop(bad_index)
 

@@ -11,7 +11,12 @@ def get_car(prediction):
   else:
     country = "Česká republika"
   price = int([x.strip() for x in result[1].split(' ')][-1])
-  car_brand = [x.strip() for x in result[6].split(' ')][1]
+  
+  for brand in ['Alfa Romeo', "Great Wall", 'Aston Martin', "Land Rover"]:
+    if brand in result[6]:
+      car_brand = brand
+    else:
+      car_brand = [x.strip() for x in result[6].split(' ')][1]
 
   if len([x.strip() for x in result[7].split(' ')]) == 3:
     model_1 = [x.strip() for x in result[7].split(' ')][-2]
@@ -31,7 +36,6 @@ def get_car(prediction):
         & (raw_data["milage"]==milage)
          & (raw_data["engine_power"]==engine_power)
          ]
-    
   pd.options.display.max_colwidth = 500
   for index, row in filtered_df.iterrows():
     print(row[["car_model", "year", "milage", "engine_power", "price", "detail", "additional_info", "add_id-href"]])
