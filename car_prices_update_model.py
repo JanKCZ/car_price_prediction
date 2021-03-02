@@ -4,25 +4,25 @@
 # # Purpose of this file
 # ### process new data from .csv file and output updated model, with predict and score methods
 
+# MODULE IMPORT
 import pandas as pd
 import numpy as np
 import copy
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import StandardScaler, OneHotEncoder, LabelEncoder, OrdinalEncoder, Normalizer, RobustScaler
+from sklearn.preprocessing import OneHotEncoder, RobustScaler
 from sklearn.pipeline import make_pipeline, Pipeline
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error as mse
 from sklearn.compose import ColumnTransformer
-from sklearn.ensemble import BaggingRegressor
 import sklearn
 import math
 from sklearn.neural_network import MLPRegressor
-# from tensorflow.keras import layers
-# import tensorflow as tf
-from tqdm import tqdm
 import joblib
 from datetime import datetime
 import matplotlib.pyplot as plt
+
+# FILE IMPORT
+from car_prediction_pytorch_model import *
+from test_prediction_result import *
 
 def yes_no(answer):
   user_input = input(answer)
@@ -35,7 +35,10 @@ def yes_no(answer):
       print("answer y or n")
       break
     
-if yes_no("update model? y/n: "):
+default = False
+# yes_no("update model? [y/n]: ")
+
+if yes_no("update model? [y/n]: "):
   print("loading CSV file....")
   raw_data = pd.read_csv('/Users/jankolnik/Downloads/car_list_all_v1_updated_sauto.csv')
 
@@ -231,12 +234,9 @@ data_frame_training_ready = data_frame_training_ready.drop(ccm_1000_power_20)
 important_columns = num_columns + cat_columns
 
 print("size before NAN drop: ", data_frame_training_ready.shape)
+data_frame_training_ready.replace([np.inf, -np.inf], np.nan, inplace=True)
 data_frame_training_ready_no_nan = data_frame_training_ready[important_columns + ['price']].dropna()
 print("size after dropping NAN: ", data_frame_training_ready_no_nan.shape)
-
-print("size before droping inf: ", data_frame_training_ready_no_nan.shape)
-data_frame_training_ready_no_nan = data_frame_training_ready_no_nan.dropna(axis=0, how='any', thresh=None, subset=None, inplace=False)
-print("size after droping inf", data_frame_training_ready_no_nan.shape)
 
 data_frame_training_ready_no_nan[cat_columns] = data_frame_training_ready_no_nan[cat_columns].astype(np.str)
 
@@ -264,40 +264,7 @@ full_pipeline = ColumnTransformer([
 X_train_final = full_pipeline.fit_transform(X_train)
 X_test_final = full_pipeline.transform(X_test)
 
-def test_result(model, n_tests):
-    create_features = False
-    text_file = open("learning_history.txt","a") 
-    today = datetime.now()
-    sum_errors = []
-    prediction_all = model.predict(X_test_final)
-    nn_mse = mse(y_test, prediction_all)
-    nn_rmse = np.sqrt(nn_mse)
-    score = model.score(X_test_final, y_test)
-
-    for sample in range(n_tests):
-        prediction = model.predict(X_test_final)[sample]
-        y_real_value = y_test.iloc[sample]
-        country = X_test.iloc[sample]['country_from']
-        trans = X_test.iloc[sample]['transmission']
-        fuell = X_test.iloc[sample]['fuell']
-        milage = X_test.iloc[sample]['milage']
-        engine_power = X_test.iloc[sample]['engine_power']
-        year = X_test.iloc[sample]['year']
-
-        brand = X_test.iloc[sample]['car_brand']
-        car_model = X_test.iloc[sample]['car_model']
-
-        error_percentage = ((-(y_real_value - prediction)/y_real_value) * 100)
-        sum_errors.append(np.absolute(error_percentage))
-        max_error = max(sum_errors)
-        print("pred: {:7.0f}, real: {:7.0f}, err.rate: {:6.2f}%, country: {:16}, trans: {:13}, fuell: {:8}, br: {:15}, md: {:13}, year: {:4}, milage: {:6.0f}, pwr: {:.0f}".format(prediction, y_real_value, error_percentage, country, trans, fuell, brand, car_model, year, milage, engine_power))
-
-    final_log = 'average error: {:7.2f}%, median error: {:7.2f}%, absolute error: {:7.0f}, score: {:7.3f}, max error: {:7.2f}%, set size: {}'.format(np.mean(sum_errors), np.median(sum_errors), nn_rmse, score, max_error, data_frame_training_ready_no_nan.shape[0])
-    print(final_log)
-
-    text_file.write("\n{}  {}".format(today, final_log))
-
-
+# SCIKIT LEARN DNN
 clf = MLPRegressor(solver='adam', alpha=0.001, learning_rate_init=0.001,
                     hidden_layer_sizes=(20, 400), random_state=42,
                     batch_size= 32, verbose = True, max_iter = 500,
@@ -305,56 +272,30 @@ clf = MLPRegressor(solver='adam', alpha=0.001, learning_rate_init=0.001,
                     validation_fraction = 0.1, early_stopping = True)
 
 
-clf.fit(X_train_final, y_train.values)
+# clf.fit(X_train_final, y_train.values)
 
-test_result(clf, 300)
-
-
+# test_result(clf, 300, library="torch")
 
 
-# def load_model():
-# 	model_path = "/Users/jankolnik/Downloads/final_model_v1.gz"
-# 	return joblib.load(model_path)
-# model = load_model()
-# test_result(model, 300)
+model = nnModel(X_train_final.shape[1], 800)
 
-# class CustomCallbacs():
-#   earlyStop = tf.keras.callbacks.EarlyStopping(patience = 5, restore_best_weights = True, monitor='val_loss')
+X_train_final_torch, y_train_torch, X_test_final_torch, y_test_torch = prepare_data(X_train_final = X_train_final, 
+                                                                                    y_train = y_train, 
+                                                                                    X_test_final = X_test_final, 
+                                                                                    y_test = y_test)
 
-# cbs = CustomCallbacs()
+trained_model = train_model(X_train_final_torch, model, epochs=2)
 
-# def build_model(n_hidden = 3, learning_rate = 0.0001, batch_norm = True, dropout = 0.1):
-#   model = tf.keras.models.Sequential()
-#   l1 = tf.keras.regularizers.l1
+X_test_test  = torch.tensor(X_test_final)
+y_test_pred = trained_model(X_test_test.float())
 
-#   for n in range(n_hidden):
-#       model.add(tf.keras.layers.Dense(1000, kernel_initializer='uniform', kernel_regularizer=l1(0.0001))) #best
-#       model.add(tf.keras.layers.ReLU()) #best
-#       model.add(tf.keras.layers.Dropout(dropout))
-    
-#   model.add(tf.keras.layers.Dense(10, kernel_initializer='uniform'))
-#   #model.add(keras.layers.Dropout(dropout))
-#   model.add(tf.keras.layers.Dense(1))
-
-#   optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
-#   model.compile(loss = 'mean_absolute_percentage_error', optimizer = optimizer)
-#   return model
-
-# keras_reg = build_model()
-# keras_reg.fit(X_train_final, 
-#                     y_train.values, 
-#                     epochs = 300, 
-#                     validation_split = 0.1, 
-#                     callbacks = [cbs.earlyStop],
-#                     batch_size = 32
-#                    )
-
-# test_result(keras_reg, 300)
+test_result(trained_model, 10, X_test_test, y_test, library="torch")
 
 
-# saving model
-joblib.dump(clf, "final_model_v1.gz")
 
-# saving scaler
-joblib.dump(full_pipeline, "final_transofrmator_v1.gz")
+# # saving model
+# joblib.dump(clf, "final_model_v1.gz")
+
+# # saving scaler
+# joblib.dump(full_pipeline, "final_transofrmator_v1.gz")
 
