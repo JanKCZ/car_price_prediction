@@ -272,37 +272,30 @@ clf = MLPRegressor(solver='adam', alpha=0.001, learning_rate_init=0.001,
                     validation_fraction = 0.1, early_stopping = True)
 
 
-clf.fit(X_train_final, y_train.values)
+# clf.fit(X_train_final, y_train.values)
 
-test_result(clf, 300)
-
-
-# model = nnModel(X_train_final.shape[1], 800)
-
-# X_train_final_torch, y_train_torch, X_test_final_torch, y_test_torch = prepare_data(X_train_final = X_train_final, 
-#                                                                                     y_train = y_train, 
-#                                                                                     X_test_final = X_test_final, 
-#                                                                                     y_test = y_test)
-
-# trained_model = train_model(X_train_final_torch, model, epochs=50)
-
-# X_test_test  = torch.tensor(X_test_final)
-# y_test_pred = model(X_test_test.float())
-
-# errors = []
-# for i in range(100):
-#   pred = round(y_test_pred[i].item(), 0)
-#   real = round(y_test_torch[i].item(), 0)
-#   error = pred - real
-#   error_rate = round(np.absolute(error) / real * 100, 2)
-#   errors.append(error_rate)
-#   print("abs_error: {}, percent_error: {}, prediction: {}, real: {}".format(error, error_rate, pred, real))
-# print(np.max(errors))
+# test_result(clf, 300, library="torch")
 
 
-# saving model
-joblib.dump(clf, "final_model_v1.gz")
+model = nnModel(X_train_final.shape[1], 800)
 
-# saving scaler
-joblib.dump(full_pipeline, "final_transofrmator_v1.gz")
+X_train_final_torch, y_train_torch, X_test_final_torch, y_test_torch = prepare_data(X_train_final = X_train_final, 
+                                                                                    y_train = y_train, 
+                                                                                    X_test_final = X_test_final, 
+                                                                                    y_test = y_test)
+
+trained_model = train_model(X_train_final_torch, model, epochs=2)
+
+X_test_test  = torch.tensor(X_test_final)
+y_test_pred = trained_model(X_test_test.float())
+
+test_result(trained_model, 10, X_test_test, y_test, library="torch")
+
+
+
+# # saving model
+# joblib.dump(clf, "final_model_v1.gz")
+
+# # saving scaler
+# joblib.dump(full_pipeline, "final_transofrmator_v1.gz")
 

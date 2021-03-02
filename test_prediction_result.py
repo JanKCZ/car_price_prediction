@@ -1,25 +1,53 @@
-def test_result(model, n_tests):
-    create_features = False
+from sklearn.metrics import mean_squared_error as mse
+import numpy as np
+import pandas as pd
+
+def test_result(model, n_tests, test_data, test_labels, library="scikit"):
+    """
+    params: library - default "scikit", other option: "torch"
+    params: test_data - for "torch" library, input data in torch tensor
+    params: test_labels - for "torch" library, input data in torch tensor
+    """
     text_file = open("learning_history.txt","a")
-    today = datetime.now()
+    today = datetime.datetime.now()
     sum_errors = []
-    prediction_all = model.predict(X_test_final)
-    nn_mse = mse(y_test, prediction_all)
-    nn_rmse = np.sqrt(nn_mse)
-    score = model.score(X_test_final, y_test)
+    if library == "scikit":
+        prediction_all = model.predict(test_data)
+        nn_mse = mse(test_labels, prediction_all)
+        nn_rmse = np.sqrt(nn_mse)
+        score = model.score(test_data, test_labels)
+    elif library == "torch":
+        prediction_all = model(test_data.float())
+        nn_mse = mse(test_labels.numpy(), prediction_all.detach().numpy())
+        nn_rmse = np.sqrt(nn_mse)
+        score = 0
+    else:
+        print("error, choose scikit or torch library")
 
     for sample in range(n_tests):
-        prediction = model.predict(X_test_final)[sample]
-        y_real_value = y_test.iloc[sample]
-        country = X_test.iloc[sample]['country_from']
-        trans = X_test.iloc[sample]['transmission']
-        fuell = X_test.iloc[sample]['fuell']
-        milage = X_test.iloc[sample]['milage']
-        engine_power = X_test.iloc[sample]['engine_power']
-        year = X_test.iloc[sample]['year']
-
-        brand = X_test.iloc[sample]['car_brand']
-        car_model = X_test.iloc[sample]['car_model']
+        if library == "scikit":
+            prediction = model.predict(test_data)[sample]
+            y_real_value = test_labels.iloc[sample]
+            country = X_test.iloc[sample]['country_from']
+            trans = X_test.iloc[sample]['transmission']
+            fuell = X_test.iloc[sample]['fuell']
+            milage = X_test.iloc[sample]['milage']
+            engine_power = X_test.iloc[sample]['engine_power']
+            year = X_test.iloc[sample]['year']
+            brand = X_test.iloc[sample]['car_brand']
+            car_model = X_test.iloc[sample]['car_model']
+        else:
+            prediction = model(test_data[sample].float()).item()
+            y_real_value = test_labels[sample].item()
+            country = X_test.iloc[sample]['country_from']
+            trans = X_test.iloc[sample]['transmission']
+            fuell = X_test.iloc[sample]['fuell']
+            milage = X_test.iloc[sample]['milage']
+            engine_power = X_test.iloc[sample]['engine_power']
+            year = X_test.iloc[sample]['year']
+            brand = X_test.iloc[sample]['car_brand']
+            car_model = X_test.iloc[sample]['car_model']
+        
 
         error_percentage = ((-(y_real_value - prediction)/y_real_value) * 100)
         sum_errors.append(np.absolute(error_percentage))

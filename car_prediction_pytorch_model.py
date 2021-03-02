@@ -26,14 +26,14 @@ def prepare_data(X_train_final, y_train, X_test_final, y_test, batch_size=32, nu
     y_train_torch = torch.IntTensor(y_train.to_numpy())
 
     X_train_torch =TensorDataset(X_train_final_torch, y_train_torch)
-    X_train_final_torch = DataLoader(X_train_torch, batch_size, shuffle = True)
+    X_train_final_torch = DataLoader(X_train_torch, batch_size, shuffle = False)
 
 
     X_test_final_torch  = torch.tensor(X_test_final)
     y_test_torch = torch.IntTensor(y_test.to_numpy())
 
     X_test_torch =TensorDataset(X_test_final_torch, y_test_torch)
-    X_test_final_torch = DataLoader(X_test_torch, batch_size, shuffle = True)
+    X_test_final_torch = DataLoader(X_test_torch, batch_size, shuffle = False)
 
     return X_train_final_torch, y_train_torch, X_test_final_torch, y_test_torch
 
@@ -41,11 +41,11 @@ class nnModel(nn.Module):
 	def __init__(self, input_size, hidden_size):
 		super(nnModel, self).__init__()
 		self.fc1 = nn.Linear(input_size, hidden_size)
-		self.relu1 = nn.ReLU()
+		self.relu1 = nn.LeakyReLU()
 		self.fc2 = nn.Linear(hidden_size, hidden_size)
-		self.relu2 = nn.ReLU()
+		self.relu2 = nn.LeakyReLU()
 		self.fc3 = nn.Linear(hidden_size, hidden_size)
-		self.relu3 = nn.ReLU()
+		self.relu3 = nn.LeakyReLU()
 		self.fc4 = nn.Linear(hidden_size, 1)
 
 	def forward(self, x):
@@ -62,7 +62,7 @@ class nnModel(nn.Module):
 # model = nnModel(X_train_final.shape[1], 800)
 
 
-def train_model(X_train_final_torch, model, epochs = 100, learning_rate=0.001):
+def train_model(X_train_final_torch, model, epochs = 100, learning_rate=0.1):
     """
     params: epochs [int] - default 100
     params: X_train_final_torch [torch dataset] - data and labels
@@ -71,7 +71,7 @@ def train_model(X_train_final_torch, model, epochs = 100, learning_rate=0.001):
 
     returns: model [torch object] - TRAINED torch ML model
     """
-    optimizer = optim.Adam(model.parameters(), lr=0.1)
+    optimizer = optim.Adam(model.parameters(), lr=learning_rate)
     criterion = nn.MSELoss()
 
     print("Starting training....")
@@ -85,5 +85,7 @@ def train_model(X_train_final_torch, model, epochs = 100, learning_rate=0.001):
             loss.backward()
             optimizer.step()
             epoch_error += round(np.sqrt(np.absolute(loss.item())), 0)
-        print("train MSE loss: ", epoch_error)
+        print("train loss: ", epoch_error)
     print("Training finished")
+    
+    return model
