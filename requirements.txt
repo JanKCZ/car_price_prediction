@@ -4,3 +4,4 @@ joblib
 Flask
 gunicorn
 scikit-learn
+torch
