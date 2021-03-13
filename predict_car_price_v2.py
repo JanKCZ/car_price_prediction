@@ -1,6 +1,5 @@
 import pandas as pd
 import joblib
-import torch
 
 def load_model():
 	model_path = 'final_model_v1.gz'
@@ -59,13 +58,13 @@ def make_test_prediction(int_features):
 
 	to_predict_final = transformator.transform(to_predict[all_columns])
  
-	if isinstance(model, torch.nn.Module):
-	 test_pred = torch.tensor(to_predict_final)
-	 prediction = model(test_pred.float()).item()
-	 return prediction
+	if "MLPRegressor" in str(model.__str__):
+		prediction = model.predict(to_predict_final)
+		return prediction[0]
 	else:
-	 prediction = model.predict(to_predict_final)
-	 return prediction[0]
+		test_pred = torch.tensor(to_predict_final)
+		prediction = model(test_pred.float()).item()
+		return prediction
 	
 
 
