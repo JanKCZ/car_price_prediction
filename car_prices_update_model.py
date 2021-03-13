@@ -18,11 +18,12 @@ import math
 from sklearn.neural_network import MLPRegressor
 import joblib
 from datetime import datetime
-import matplotlib.pyplot as plt
+import sys
 
 # FILE IMPORT
 from car_prediction_pytorch_model import *
 from test_prediction_result import *
+from car_prediction_scikit_model import *
 
 def yes_no(answer):
   user_input = input(answer)
@@ -45,10 +46,12 @@ if yes_no("update model? [y/n]: "):
   raw_data_update = pd.read_csv("/Users/jankolnik/Downloads/car_list_all_v1_sauto_update.csv")
 
   raw_data_updated = pd.concat([raw_data, raw_data_update])
-
+  
   #drop duplicated adds
-  raw_data_updated = raw_data_updated.drop_duplicates(subset=['add_id-href'])
-  raw_data = raw_data.reset_index(drop=True)
+  raw_data_updated.drop_duplicates(subset=['add_id-href'], keep = "last", inplace = True)
+  
+  raw_data_updated = raw_data_updated.reset_index(drop=True)
+  # raw_data = raw_data.reset_index(drop=True)
 
   #save to CSV
   raw_data_updated.to_csv('/Users/jankolnik/Downloads/car_list_all_v1_updated_sauto.csv', index = False, header=True)
@@ -59,13 +62,24 @@ if yes_no("update model? [y/n]: "):
 
   #remove adds, which include words about damaged or non-functional cars
   bad_words = [" vadný", " vadné", " rozbit", " havarovan", " poškozen", "špatn", "nepojízd", 
-  " bourané", " bouraný", "koroze", "kosmetick", "dodělaní", "na náhradní díly", "porucha", " porouchan", "KO!",
-  "drobné závady", "závady", "oděrky", "zreziv", "rezav", "přetržený"]
+  " bourané", " bouraný", "koroze", "kosmetick", "dodělaní", "na náhradní díly", "porucha", " porouchan", " KO!",
+  "drobné závady", "závad", "oděrky", "zreziv", "rezav", "přetržený", "praskl", "nenastartuje", "nenaskočí", "problém s"]
   good_words = ["bez poškození", "žádné poškození", "nemá poškození", "není poškozen", "bez koroze", 
-  "žádné závady", "bez závad", "žádné závady"]
+  "žádné závady", "bez závad"]
   bad_index = []
 
-  not_nan = raw_data[raw_data.additional_info.notnull()]
+  
+  not_nan = raw_data_updated[raw_data_updated.price_more_info.notnull()]
+
+  for word in bad_words:
+    bad_words_index = not_nan[not_nan.price_more_info.str.contains(word, case = False)].index
+    for good in good_words:
+      if good not in bad_words_index:
+        for index in bad_words_index:
+          if index not in bad_index:
+            bad_index.append(index)
+            
+  not_nan = raw_data_updated[raw_data_updated.additional_info.notnull()]
 
   for word in bad_words:
     bad_words_index = not_nan[not_nan.additional_info.str.contains(word, case = False)].index
@@ -76,17 +90,17 @@ if yes_no("update model? [y/n]: "):
             bad_index.append(index)
 
   for word in bad_words:
-    bad_words_index = raw_data[raw_data.detail.str.contains(word, case = False)].index
+    bad_words_index = raw_data_updated[raw_data_updated.detail.str.contains(word, case = False)].index
     for good in good_words:
       if good not in bad_words_index:
         for index in bad_words_index:
           if index not in bad_index:
             bad_index.append(index)
-
+            
   raw_data_updated = raw_data_updated.drop(bad_index)
 
   pd.set_option('display.max_colwidth', None)
-  print("dropping wrong adds with words: ", bad_words)
+  print("dropped adds with words: ", bad_words)
 
   #dropping useless columns:
   data_no_trash_columns = raw_data_updated.drop(['web-scraper-order', 'web-scraper-start-url', 
@@ -171,6 +185,7 @@ is_sparse = False
 drop_wrong_power_ccm_combination = True
 
 data_frame_training_ready = pd.read_csv('/Users/jankolnik/Downloads/car_list_sauto_preprocessed_2.csv')
+
 print("size of fresh CSV: ", data_frame_training_ready)
 
 # drop old cars with unreliable data
@@ -240,7 +255,7 @@ print("size after dropping NAN: ", data_frame_training_ready_no_nan.shape)
 
 data_frame_training_ready_no_nan[cat_columns] = data_frame_training_ready_no_nan[cat_columns].astype(np.str)
 
-y = data_frame_training_ready_no_nan.pop('price').astype(np.float32)
+y = data_frame_training_ready_no_nan.pop('price').astype(np.float64)
 X = data_frame_training_ready_no_nan
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -264,38 +279,39 @@ full_pipeline = ColumnTransformer([
 X_train_final = full_pipeline.fit_transform(X_train)
 X_test_final = full_pipeline.transform(X_test)
 
-# SCIKIT LEARN DNN
-clf = MLPRegressor(solver='adam', alpha=0.001, learning_rate_init=0.001,
-                    hidden_layer_sizes=(20, 400), random_state=42,
-                    batch_size= 32, verbose = True, max_iter = 500,
-                    learning_rate = 'adaptive', warm_start=True,
-                    validation_fraction = 0.1, early_stopping = True)
+X_train_final = X_train_final.astype(np.float64)
+X_test_final = X_test_final.astype(np.float64)
 
+use_scikit = True
 
-# clf.fit(X_train_final, y_train.values)
+if use_scikit:
+  # SCIKIT LEARN DNN
+  model = MLPRegressor(solver="adam", alpha=0.001, learning_rate_init=0.005,
+                        hidden_layer_sizes=(16, 536), random_state=42,
+                        batch_size= 32, verbose = True, max_iter = 300,
+                        learning_rate = 'adaptive', warm_start=True,
+                        validation_fraction = 0.1, early_stopping = True, activation="relu")
+  
+  model.fit(X_train_final, y_train.values)
 
-# test_result(clf, 300, library="torch")
+  test_result(model, 300, X_test_final, y_test, X_test)
+else:
+  # PYTORCH
+  model = nnModel(X_train_final.shape[1], 200, 20, 0)
 
+  X_train_final_torch, y_train_torch, X_test_final_torch, y_test_torch = prepare_data(X_train_final = X_train_final, 
+                                                                                      y_train = y_train, 
+                                                                                      X_test_final = X_test_final, 
+                                                                                      y_test = y_test)
+  
+  trained_model, _ = train_model(X_train_final_torch, X_test_final_torch, model, epochs=200, learning_rate=0.001, patience=10)
+  
+  X_test_test  = torch.tensor(X_test_final)
+  test_result(trained_model, 300, X_test_test, y_test_torch, X_test, library="torch")
+    
 
-model = nnModel(X_train_final.shape[1], 800)
+# saving model
+joblib.dump(model, "final_model_v1.gz")
 
-X_train_final_torch, y_train_torch, X_test_final_torch, y_test_torch = prepare_data(X_train_final = X_train_final, 
-                                                                                    y_train = y_train, 
-                                                                                    X_test_final = X_test_final, 
-                                                                                    y_test = y_test)
-
-trained_model = train_model(X_train_final_torch, model, epochs=2)
-
-X_test_test  = torch.tensor(X_test_final)
-y_test_pred = trained_model(X_test_test.float())
-
-test_result(trained_model, 10, X_test_test, y_test, library="torch")
-
-
-
-# # saving model
-# joblib.dump(clf, "final_model_v1.gz")
-
-# # saving scaler
-# joblib.dump(full_pipeline, "final_transofrmator_v1.gz")
-
+# saving scaler
+joblib.dump(full_pipeline, "final_transofrmator_v1.gz")

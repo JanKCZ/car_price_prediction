@@ -1,12 +1,15 @@
+import datetime
 from sklearn.metrics import mean_squared_error as mse
 import numpy as np
 import pandas as pd
 
-def test_result(model, n_tests, test_data, test_labels, library="scikit"):
+
+def test_result(model, n_tests, test_data, test_labels, test_data_raw, library="scikit"):
     """
     params: library - default "scikit", other option: "torch"
-    params: test_data - for "torch" library, input data in torch tensor
-    params: test_labels - for "torch" library, input data in torch tensor
+    params: test_data - [pandas DF or torch] - input data
+    params: test_labels - [pandas DF or torch] - labels data
+    params: test_data_raw - [pandas DF] - input data before pipeline preprocesing
     """
     text_file = open("learning_history.txt","a")
     today = datetime.datetime.now()
@@ -28,25 +31,18 @@ def test_result(model, n_tests, test_data, test_labels, library="scikit"):
         if library == "scikit":
             prediction = model.predict(test_data)[sample]
             y_real_value = test_labels.iloc[sample]
-            country = X_test.iloc[sample]['country_from']
-            trans = X_test.iloc[sample]['transmission']
-            fuell = X_test.iloc[sample]['fuell']
-            milage = X_test.iloc[sample]['milage']
-            engine_power = X_test.iloc[sample]['engine_power']
-            year = X_test.iloc[sample]['year']
-            brand = X_test.iloc[sample]['car_brand']
-            car_model = X_test.iloc[sample]['car_model']
         else:
             prediction = model(test_data[sample].float()).item()
             y_real_value = test_labels[sample].item()
-            country = X_test.iloc[sample]['country_from']
-            trans = X_test.iloc[sample]['transmission']
-            fuell = X_test.iloc[sample]['fuell']
-            milage = X_test.iloc[sample]['milage']
-            engine_power = X_test.iloc[sample]['engine_power']
-            year = X_test.iloc[sample]['year']
-            brand = X_test.iloc[sample]['car_brand']
-            car_model = X_test.iloc[sample]['car_model']
+            
+        country = test_data_raw.iloc[sample]['country_from']
+        trans = test_data_raw.iloc[sample]['transmission']
+        fuell = test_data_raw.iloc[sample]['fuell']
+        milage = test_data_raw.iloc[sample]['milage']
+        engine_power = test_data_raw.iloc[sample]['engine_power']
+        year = test_data_raw.iloc[sample]['year']
+        brand = test_data_raw.iloc[sample]['car_brand']
+        car_model = test_data_raw.iloc[sample]['car_model']
         
 
         error_percentage = ((-(y_real_value - prediction)/y_real_value) * 100)
@@ -54,7 +50,7 @@ def test_result(model, n_tests, test_data, test_labels, library="scikit"):
         max_error = max(sum_errors)
         print("pred: {:7.0f}, real: {:7.0f}, err.rate: {:6.2f}%, country: {:16}, trans: {:13}, fuell: {:8}, br: {:15}, md: {:13}, year: {:4}, milage: {:6.0f}, pwr: {:.0f}".format(prediction, y_real_value, error_percentage, country, trans, fuell, brand, car_model, year, milage, engine_power))
 
-    final_log = 'average error: {:7.2f}%, median error: {:7.2f}%, absolute error: {:7.0f}, score: {:7.3f}, max error: {:7.2f}%, set size: {}'.format(np.mean(sum_errors), np.median(sum_errors), nn_rmse, score, max_error, data_frame_training_ready_no_nan.shape[0])
+    final_log = 'average error: {:7.2f}%, median error: {:7.2f}%, absolute error: {:7.0f}, score: {:7.3f}, max error: {:7.2f}%, set size: {}, lib: {}'.format(np.mean(sum_errors), np.median(sum_errors), nn_rmse, score, max_error, (test_data_raw.shape[0]/2)*10, library)
     print(final_log)
 
     text_file.write("\n{}  {}".format(today, final_log))

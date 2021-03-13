@@ -1,5 +1,6 @@
 import pandas as pd
 import joblib
+import torch
 
 def load_model():
 	model_path = 'final_model_v1.gz'
@@ -56,12 +57,16 @@ def make_test_prediction(int_features):
 	#years will only be fro 1 to 20
 	to_predict['year'] = to_predict['year'] - 2000
 
-	# test_list = ["Škoda", "Fabia", "CUV", "Ojeté", "Ne", 2010, "nafta", 5, 0, 0, "Belgie", 74, 100000].reshape(-1, 1)
-
 	to_predict_final = transformator.transform(to_predict[all_columns])
-	prediction = model.predict(to_predict_final)
-
-	return prediction[0]
+ 
+	if isinstance(model, torch.nn.Module):
+	 test_pred = torch.tensor(to_predict_final)
+	 prediction = model(test_pred.float()).item()
+	 return prediction
+	else:
+	 prediction = model.predict(to_predict_final)
+	 return prediction[0]
+	
 
 
 

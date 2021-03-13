@@ -3,7 +3,9 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import TensorDataset, DataLoader
 import torch.utils.data as data_utils
+from sklearn.metrics import mean_squared_error as mse
 import numpy as np
+from validation_test import *
 
 def prepare_data(X_train_final, y_train, X_test_final, y_test, batch_size=32, num_workers=1):
     """
@@ -38,31 +40,28 @@ def prepare_data(X_train_final, y_train, X_test_final, y_test, batch_size=32, nu
     return X_train_final_torch, y_train_torch, X_test_final_torch, y_test_torch
 
 class nnModel(nn.Module):
-	def __init__(self, input_size, hidden_size):
-		super(nnModel, self).__init__()
-		self.fc1 = nn.Linear(input_size, hidden_size)
-		self.relu1 = nn.LeakyReLU()
-		self.fc2 = nn.Linear(hidden_size, hidden_size)
-		self.relu2 = nn.LeakyReLU()
-		self.fc3 = nn.Linear(hidden_size, hidden_size)
-		self.relu3 = nn.LeakyReLU()
-		self.fc4 = nn.Linear(hidden_size, 1)
+    def __init__(self, input_size, hidden_size, n_layers, dropout):
+        super(nnModel, self).__init__()
+        layers = []
+        for _ in range(n_layers):
+            if len(layers) == 0:
+                layers.append(nn.Linear(input_size, hidden_size))
+                layers.append(nn.Dropout(dropout))
+                layers.append(nn.ReLU())
+            else:
+                layers.append(nn.Linear(hidden_size, hidden_size))
+                layers.append(nn.Dropout(dropout))
+                layers.append(nn.ReLU())
+        
+        layers.append(nn.Linear(hidden_size, 1))
 
-	def forward(self, x):
-		out = self.fc1(x)
-		out = self.relu1(out)
-		out = self.fc2(out)
-		out = self.relu2(out)
-		out = self.fc3(out)
-		out = self.relu3(out)
-		out = self.fc4(out)
-		return out
+        self.model = nn.Sequential(*layers)
 
-
-# model = nnModel(X_train_final.shape[1], 800)
+    def forward(self, x):
+        return self.model(x)
 
 
-def train_model(X_train_final_torch, model, epochs = 100, learning_rate=0.1):
+def train_model(X_train_final_torch, X_test_final_torch, model, epochs = 100, learning_rate=0.01, patience = 5):
     """
     params: epochs [int] - default 100
     params: X_train_final_torch [torch dataset] - data and labels
@@ -74,9 +73,14 @@ def train_model(X_train_final_torch, model, epochs = 100, learning_rate=0.1):
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
     criterion = nn.MSELoss()
 
+    validation = Validation()
+
     print("Starting training....")
     for epoch in range(epochs):
         epoch_error = 0
+        val_error = 0
+        break_training = False
+        # train data
         for i, batch in enumerate(X_train_final_torch):
             inputs, labels = batch
             optimizer.zero_grad()
@@ -85,7 +89,23 @@ def train_model(X_train_final_torch, model, epochs = 100, learning_rate=0.1):
             loss.backward()
             optimizer.step()
             epoch_error += round(np.sqrt(np.absolute(loss.item())), 0)
-        print("train loss: ", epoch_error)
+        
+        #validate data
+        for i, batch in enumerate(X_test_final_torch):
+            inputs, labels = batch
+            prediction = model(inputs.float())
+            val_loss = criterion(prediction, labels.float().view(-1, 1))
+            val_error += round(np.sqrt(np.absolute(val_loss.item())), 0)
+
+        model_best, best_val_error, break_training = validation.validate_testing(model, val_error, patience=patience)
+        
+        if break_training == True:
+            model = model_best
+            print(f"val error hasent improved over time, breaking the training at val {best_val_error}")
+            return model
+
+        print("epoch",(epoch + 1),"/",epochs, "train loss: ", epoch_error, "val loss: ", val_error)
     print("Training finished")
     
-    return model
+    return model, best_val_error
+

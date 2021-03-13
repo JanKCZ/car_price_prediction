@@ -38,7 +38,7 @@ def get_car(prediction):
          ]
   pd.options.display.max_colwidth = 500
   for index, row in filtered_df.iterrows():
-    print(row[["car_model", "year", "milage", "engine_power", "price", "detail", "additional_info", "add_id-href"]])
+    print(row[["car_model", "year", "milage", "engine_power", "price", "price_more_info", "detail", "additional_info", "add_id-href"]])
 
 prediction_text = input("paste prediction text: ")
 get_car(prediction_text)
