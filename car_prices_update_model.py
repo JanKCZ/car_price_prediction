@@ -19,6 +19,7 @@ from sklearn.neural_network import MLPRegressor
 import joblib
 from datetime import datetime
 import sys
+from tqdm import tqdm
 
 # FILE IMPORT
 from car_prediction_pytorch_model import *
@@ -71,8 +72,7 @@ if yes_no("update model? [y/n]: "):
 
   
   not_nan = raw_data_updated[raw_data_updated.price_more_info.notnull()]
-
-  for word in bad_words:
+  for word in tqdm(bad_words):
     bad_words_index = not_nan[not_nan.price_more_info.str.contains(word, case = False)].index
     for good in good_words:
       if good not in bad_words_index:
@@ -81,8 +81,7 @@ if yes_no("update model? [y/n]: "):
             bad_index.append(index)
             
   not_nan = raw_data_updated[raw_data_updated.additional_info.notnull()]
-
-  for word in bad_words:
+  for word in tqdm(bad_words):
     bad_words_index = not_nan[not_nan.additional_info.str.contains(word, case = False)].index
     for good in good_words:
       if good not in bad_words_index:
@@ -90,8 +89,9 @@ if yes_no("update model? [y/n]: "):
           if index not in bad_index:
             bad_index.append(index)
 
-  for word in bad_words:
-    bad_words_index = raw_data_updated[raw_data_updated.detail.str.contains(word, case = False)].index
+  not_nan = raw_data_updated[raw_data_updated.detail.notnull()]
+  for word in tqdm(bad_words):
+    bad_words_index = not_nan[not_nan.detail.str.contains(word, case = False)].index
     for good in good_words:
       if good not in bad_words_index:
         for index in bad_words_index:
@@ -247,11 +247,12 @@ cmm_1000 = data_frame_training_ready[lambda data: data.ccm > 1000]
 ccm_1000_power_20 = cmm_1000[lambda data: data.engine_power < 20].index
 data_frame_training_ready = data_frame_training_ready.drop(ccm_1000_power_20)
 
-important_columns = num_columns + cat_columns
+important_columns = num_columns + cat_columns + ["price"]
+data_frame_training_ready_important = data_frame_training_ready[important_columns]
 
-print("size before NAN drop: ", data_frame_training_ready.shape)
-data_frame_training_ready.replace([np.inf, -np.inf], np.nan, inplace=True)
-data_frame_training_ready_no_nan = data_frame_training_ready[important_columns + ['price']].dropna()
+print("size before NAN drop: ", data_frame_training_ready_important.shape)
+# data_frame_training_ready_important.replace([np.inf, -np.inf], np.nan, inplace=True)
+data_frame_training_ready_no_nan = data_frame_training_ready_important.dropna()
 print("size after dropping NAN: ", data_frame_training_ready_no_nan.shape)
 
 data_frame_training_ready_no_nan[cat_columns] = data_frame_training_ready_no_nan[cat_columns].astype(np.str)
@@ -298,14 +299,14 @@ if use_scikit:
   test_result(model, 300, X_test_final, y_test, X_test)
 else:
   # PYTORCH
-  model = nnModel(X_train_final.shape[1], 200, 20, 0)
+  model = Torch_model(X_train_final.shape[1], 200, 20, 0, solver=None, activation=None)
 
   X_train_final_torch, y_train_torch, X_test_final_torch, y_test_torch = prepare_data(X_train_final = X_train_final, 
                                                                                       y_train = y_train, 
                                                                                       X_test_final = X_test_final, 
                                                                                       y_test = y_test)
   
-  trained_model, _ = train_model(X_train_final_torch, X_test_final_torch, model, epochs=200, learning_rate=0.001, patience=10)
+  trained_model = train_model(X_train_final_torch, X_test_final_torch, model, epochs=200, learning_rate=0.001)
   
   X_test_test  = torch.tensor(X_test_final)
   test_result(trained_model, 300, X_test_test, y_test_torch, X_test, library="torch")

@@ -6,6 +6,7 @@ import torch.utils.data as data_utils
 from sklearn.metrics import mean_squared_error as mse
 import numpy as np
 from validation_test import *
+from tensorboardX import SummaryWriter
 
 def prepare_data(X_train_final, y_train, X_test_final, y_test, batch_size=32, num_workers=1):
     """
@@ -39,9 +40,9 @@ def prepare_data(X_train_final, y_train, X_test_final, y_test, batch_size=32, nu
 
     return X_train_final_torch, y_train_torch, X_test_final_torch, y_test_torch
 
-class nnModel(nn.Module):
-    def __init__(self, input_size, hidden_size, n_layers, dropout):
-        super(nnModel, self).__init__()
+class Torch_model(nn.Module):
+    def __init__(self, input_size, hidden_size, n_layers, dropout, solver, activation):
+        super(Torch_model, self).__init__()
         layers = []
         for _ in range(n_layers):
             if len(layers) == 0:
@@ -75,6 +76,8 @@ def train_model(X_train_final_torch, X_test_final_torch, model, epochs = 100, le
 
     validation = Validation()
 
+    writer = SummaryWriter()
+
     print("Starting training....")
     for epoch in range(epochs):
         epoch_error = 0
@@ -104,8 +107,11 @@ def train_model(X_train_final_torch, X_test_final_torch, model, epochs = 100, le
             print(f"val error hasent improved over time, breaking the training at val {best_val_error}")
             return model
 
+        writer.add_scalar("epoch error", epoch_error, epoch)
+        writer.add_scalar("val error", val_error, epoch)
+    
         print("epoch",(epoch + 1),"/",epochs, "train loss: ", epoch_error, "val loss: ", val_error)
     print("Training finished")
-    
-    return model, best_val_error
+    writer.close()
+    return model
 

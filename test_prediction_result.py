@@ -2,7 +2,8 @@ import datetime
 from sklearn.metrics import mean_squared_error as mse
 import numpy as np
 import pandas as pd
-
+import torch
+from email_notification import *
 
 def test_result(model, n_tests, test_data, test_labels, test_data_raw, library="scikit"):
     """
@@ -52,5 +53,7 @@ def test_result(model, n_tests, test_data, test_labels, test_data_raw, library="
 
     final_log = 'average error: {:7.2f}%, median error: {:7.2f}%, absolute error: {:7.0f}, score: {:7.3f}, max error: {:7.2f}%, set size: {}, lib: {}'.format(np.mean(sum_errors), np.median(sum_errors), nn_rmse, score, max_error, (test_data_raw.shape[0]/2)*10, library)
     print(final_log)
+
+    send_email()
 
     text_file.write("\n{}  {}".format(today, final_log))
