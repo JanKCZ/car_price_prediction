@@ -42,7 +42,13 @@ def get_details_url(n_pages):
 
 def scrape_car_detail(detail_url):
     df_detail = pd.DataFrame()
-    browser = start_chrome(url=detail_url, headless=True)
+    try:
+        browser = start_chrome(url=detail_url, headless=True)
+    except Exception:
+        time.sleep(60)
+        browser.quit()
+        browser = start_chrome(url=detail_url, headless=True)
+
     soup = bs(browser.page_source, "html.parser")
 
     def handle_exception(item, print_=False):
@@ -224,9 +230,9 @@ def run_scrapping():
         detail_df = scrape_car_detail(url[0])
         car_list_all_v2_sauto_update = car_list_all_v2_sauto_update.append(detail_df, sort=False)
         print(f"details added: {index + 1}", end="\r", flush=True)
-        if (index + 1) % 300 == 0:
+        if (index + 1) % 50 == 0:
             car_list_all_v2_sauto_update.to_csv(f"{directory}/{csv_file_name}", index=False)
-            print("300 more details added, saving...")
+            print("50 more details added, saving...")
 
     car_list_all_v2_sauto_update.to_csv(f"{directory}/{csv_file_name}", index=False)
     email_notification.send_email(f"got all the {index + 1} details")
