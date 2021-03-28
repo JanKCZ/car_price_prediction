@@ -27,7 +27,7 @@ def get_details_url(n_pages):
             print(f"urls added: {index}", end="\r", flush=True)
 
         # save to csv each 100 URLs
-        if n % 100 == 0:
+        if n % 500 == 0:
             df = pd.DataFrame(car_detail_url_list)
             df.to_csv("car_detail_url_list.csv", index = False)
 
