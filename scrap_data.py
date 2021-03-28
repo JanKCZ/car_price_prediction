@@ -25,7 +25,6 @@ def get_details_url(n_pages):
                 index += 1
 
             print(f"urls added: {index}", end="\r", flush=True)
-            time.sleep(0.1)
 
         # save to csv each 100 URLs
         if n % 100 == 0:
@@ -225,9 +224,9 @@ def run_scrapping():
         detail_df = scrape_car_detail(url[0])
         car_list_all_v2_sauto_update = car_list_all_v2_sauto_update.append(detail_df, sort=False)
         print(f"details added: {index + 1}", end="\r", flush=True)
-        if (index + 1) % 50 == 0:
+        if (index + 1) % 300 == 0:
             car_list_all_v2_sauto_update.to_csv(f"{directory}/{csv_file_name}", index=False)
-            print("50 more details added, saving...")
+            print("300 more details added, saving...")
 
     car_list_all_v2_sauto_update.to_csv(f"{directory}/{csv_file_name}", index=False)
     email_notification.send_email(f"got all the {index + 1} details")
