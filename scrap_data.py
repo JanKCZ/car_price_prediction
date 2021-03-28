@@ -15,7 +15,6 @@ def get_details_url(n_pages):
     index = 0
     for n in range(1, (n_pages+1)):
         browser = start_chrome(get_page_url(n), headless=True)
-        time.sleep(3)
         soup = bs(browser.page_source, "html.parser")
         results = soup.find_all("a", class_= "toDetail")
         for element in results:
@@ -34,7 +33,7 @@ def get_details_url(n_pages):
             df.to_csv("car_detail_url_list.csv", index = False)
 
         browser.quit()
-        time.sleep(2)
+        time.sleep(3)
 
     df = pd.DataFrame(car_detail_url_list, columns = ["url"])
     df.to_csv("car_detail_url_list.csv", index=False)
@@ -207,8 +206,7 @@ def scrape_car_detail(detail_url):
 
 def run_scrapping():
     # run through all pages and get all the URLs of add details, save to CSV
-    get_details_url(2)
-    time.sleep(5)
+    get_details_url(400)
 
     directory = "car_update_data"
     csv_file_name = "car_list_all_v2_sauto_update.csv"
@@ -230,9 +228,6 @@ def run_scrapping():
         if (index + 1) % 50 == 0:
             car_list_all_v2_sauto_update.to_csv(f"{directory}/{csv_file_name}", index=False)
             print("50 more details added, saving...")
-
-        if index == 2:
-            break
 
     car_list_all_v2_sauto_update.to_csv(f"{directory}/{csv_file_name}", index=False)
     email_notification.send_email(f"got all the {index + 1} details")

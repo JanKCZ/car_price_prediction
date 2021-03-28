@@ -44,7 +44,8 @@ if yes_no("update model? [y/n]: "):
   print("loading CSV file....")
   raw_data = pd.read_csv('/Users/jankolnik/Downloads/car_list_all_v1_updated_sauto.csv')
 
-  raw_data_update = pd.read_csv("/Users/jankolnik/Downloads/car_list_all_v1_sauto_update.csv")
+  # raw_data_update = pd.read_csv("/Users/jankolnik/Downloads/car_list_all_v1_sauto_update.csv")
+  raw_data_update = pd.read_csv("/Users/jankolnik/Downloads/car_list_all_v2_sauto_update.csv")
 
   raw_data_updated = pd.concat([raw_data, raw_data_update])
   
@@ -132,13 +133,10 @@ if yes_no("update model? [y/n]: "):
   #year
   data_frame_number_clean.year = data_frame_number_clean.year.map(lambda x: np.str(x).split("/")[-1].replace(" ", '').replace("\xa0", "").strip())
 
-  #stk
-  data_frame_number_clean.stk = data_frame_number_clean.stk.map(lambda x: np.str(x).replace(" ", '').replace("\xa0", "").split("/")[-1].strip())
   data_frame_number_clean.milage = pd.to_numeric(data_frame_number_clean.milage, errors='coerce')
   data_frame_number_clean.price = pd.to_numeric(data_frame_number_clean.price, errors='coerce')
   data_frame_number_clean.engine_power = pd.to_numeric(data_frame_number_clean.engine_power, errors='coerce')
   data_frame_number_clean.year = pd.to_numeric(data_frame_number_clean.year, errors='coerce')
-  data_frame_number_clean.stk = pd.to_numeric(data_frame_number_clean.stk, errors='coerce')
   data_frame_number_clean.ccm = pd.to_numeric(data_frame_number_clean.ccm, errors='coerce')
 
   data_frame_no_dupl = data_frame_number_clean.copy()
@@ -170,6 +168,10 @@ if yes_no("update model? [y/n]: "):
   print("dropping cars with ccm over 8k")
   data_ccm_more_8k = data_frame_no_dupl[lambda data: data.ccm > 8000].index
   data_frame_no_dupl = data_frame_no_dupl.drop(data_ccm_more_8k)
+
+  print("droping None cars")
+  data_frame_no_dupl_no_none_cars = data_frame_no_dupl[lambda data: data.car_brand == "None"].index
+  data_frame_no_dupl = data_frame_no_dupl.drop(data_frame_no_dupl_no_none_cars)
 
   data_frame_no_neuvedeno = data_frame_no_dupl.copy()
   for column in data_frame_no_neuvedeno.columns:
