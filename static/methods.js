@@ -58,13 +58,13 @@ function checkParametres() {
 	document.getElementById("country_input").value = country
 	param_list.push(country)
 
-	if (param_list.includes("-- vyberte jednu z možností --") == true) {
+	if (param_list.includes("výrobce") == true) {
 		alert("vyplňte všechny údaje")
 		return false
-	} else if (param_list.includes("-- jako první zvolte výrobce --") == true) {
+	} else if (param_list.includes("model") == true) {
 		alert("vyplňte všechny údaje")
 		return false
-	} else if (param_list.includes(undefined)) {
+	} else if (param_list.includes(undefined) == true) {
 		alert("vyplňte všechny údaje")
 		return false
 	} else if (param_list.includes('')) {
@@ -73,7 +73,7 @@ function checkParametres() {
 	} else if (param_list.length == 0) {
 		alert("vyplňte všechny údaje")
 		return false
-	} else if (param_list.includes("klimatizace")) {
+	} else if (param_list.includes("klimatizace") == true) {
 		alert("vyplňte všechny údaje")
 		return false
 	} else if (param_list.length < 13) {
@@ -87,22 +87,6 @@ function checkParametres() {
 		return false
 	} else {
 		return true
-		// alert("brand: " + car_brand + "\n" +
-		// 	"model: " + car_model + "\n" +
-		// 	"type: " + type + "\n" +
-		// 	"engine_power: " + engine_power + "\n" +
-		// 	"condition: " + condition + "\n" +
-		// 	"book: " + book + "\n" +
-		// 	"year: " + year + "\n" +
-		// 	"milage: " + milage + "\n" +
-		// 	"fuel: " + fuel + "\n" +
-		// 	"n_ppl: " + n_ppl + "\n" +
-		// 	"airbags: " + airbags + "\n" +
-		// 	"doors: " + doors + "\n" +
-		// 	"aircondition: " + aircondition + "\n" +
-		// 	"transmission: " + transmission + "\n" +
-		// 	"country: " + country + "\n" +
-		// 	"extras: " + extras);
 	}
 }
 
