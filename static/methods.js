@@ -73,6 +73,12 @@ function checkParametres() {
 	} else if (param_list.length == 0) {
 		alert("vyplňte všechny údaje")
 		return false
+	} else if (param_list.includes("klimatizace")) {
+		alert("vyplňte všechny údaje")
+		return false
+	} else if (param_list.length < 13) {
+		alert("vyplňte všechny údaje")
+		return false
 	} else if (year < 2000) {
 		alert("rok výroby vozidla musí být mladší 2000")
 		return false
@@ -160,7 +166,8 @@ function passParametres() {
 	document.getElementById("country_input").value = country
 	param_list.push(country);
 
-	console.log(param_list);
+	console.log(param_list.slice(0, 6));
+	console.log(param_list.slice(7, 12));
 	return param_list
 }
 
