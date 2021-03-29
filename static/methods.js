@@ -64,6 +64,15 @@ function checkParametres() {
 	} else if (param_list.includes("model") == true) {
 		alert("vyplňte všechny údaje")
 		return false
+	} else if (param_list.includes("karoserie") == true) {
+		alert("vyplňte všechny údaje")
+		return false
+	} else if (param_list.includes("převodovka") == true) {
+		alert("vyplňte všechny údaje")
+		return false
+	} else if (param_list.includes("palivo") == true) {
+		alert("vyplňte všechny údaje")
+		return false
 	} else if (param_list.includes(undefined) == true) {
 		alert("vyplňte všechny údaje")
 		return false
