@@ -76,7 +76,7 @@ function checkParametres() {
 	} else if (param_list.includes(undefined) == true) {
 		alert("vyplňte všechny údaje")
 		return false
-	} else if (param_list.includes('')) {
+	} else if (param_list.includes('') == true) {
 		alert("vyplňte všechny údaje")
 		return false
 	} else if (param_list.length == 0) {

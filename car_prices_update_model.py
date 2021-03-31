@@ -44,7 +44,6 @@ if yes_no("update model? [y/n]: "):
   print("loading CSV file....")
   raw_data = pd.read_csv('/Users/jankolnik/Downloads/car_list_all_v1_updated_sauto.csv')
 
-  # raw_data_update = pd.read_csv("/Users/jankolnik/Downloads/car_list_all_v1_sauto_update.csv")
   raw_data_update = pd.read_csv("/Users/jankolnik/Downloads/car_list_all_v2_sauto_update.csv")
 
   raw_data_updated = pd.concat([raw_data, raw_data_update])
@@ -59,7 +58,7 @@ if yes_no("update model? [y/n]: "):
   raw_data_updated.to_csv('/Users/jankolnik/Downloads/car_list_all_v1_updated_sauto.csv', index = False, header=True)
 
   print("{} shape before update".format(raw_data.shape[0]))
-  print("added {} rows of raw data".format(raw_data_update.shape[0]))
+  # print("added {} rows of raw data".format(raw_data_update.shape[0]))
   print("final raw data shape is {}".format(raw_data_updated.shape))
 
   #remove adds, which include words about damaged or non-functional cars
