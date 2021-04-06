@@ -13,8 +13,6 @@ def test_result(model, n_tests, test_data, test_labels, test_data_raw, library="
     params: test_labels - [pandas DF or torch] - labels data
     params: test_data_raw - [pandas DF] - input data before pipeline preprocesing
     """
-    text_file = open("learning_history.txt","a")
-    today = datetime.datetime.now()
     sum_errors = []
     if library == "scikit":
         prediction_all = model.predict(test_data)
@@ -55,8 +53,8 @@ def test_result(model, n_tests, test_data, test_labels, test_data_raw, library="
     final_log = 'average error: {:7.2f}%, median error: {:7.2f}%, absolute error: {:7.0f}, score: {:7.3f}, max error: {:7.2f}%, set size: {}, lib: {}'.format(np.mean(sum_errors), np.median(sum_errors), nn_rmse, score, max_error, (test_data_raw.shape[0]/2)*10, library)
     print(final_log)
 
-    time.sleep(2)
-    send_email("car prediction training completed")
-    time.sleep(2)
+    send_email(f"car prediction training completed, with results {final_log}")
 
-    text_file.write("\n{}  {}".format(today, final_log))
+    with open("learning_history.txt","a") as text_file:
+        today = datetime.datetime.now()
+        text_file.write("\n{}  {}".format(today, final_log))

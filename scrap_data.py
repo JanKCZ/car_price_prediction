@@ -13,42 +13,44 @@ def get_page_url(site_number):
 def get_details_url(n_pages):
     car_detail_url_list = []
     index = 0
+    reload_browser = True
     for n in range(1, (n_pages+1)):
-        browser = start_chrome(get_page_url(n), headless=True)
+        if reload_browser:
+            browser = start_chrome(get_page_url(n), headless=True)
+            reload_browser = False
+
+        browser.get(get_page_url(n))
         soup = bs(browser.page_source, "html.parser")
         results = soup.find_all("a", class_= "toDetail")
+        all_urls = n_pages*17
         for element in results:
             url_part = element.get("href")
             url = f"https://www.sauto.cz{url_part}"
             if url not in car_detail_url_list:
                 car_detail_url_list.append(url)
-                index += 1
+                index += 1 
+            print(f"urls added: {index}/{all_urls}", end="\r", flush=True)
 
-            print(f"urls added: {index}", end="\r", flush=True)
-
-        # save to csv each 100 URLs
-        if n % 500 == 0:
+        # save to csv each 500 URLs
+        if (n + 1) % 25 == 0:
             df = pd.DataFrame(car_detail_url_list)
+            print(f"saving at {index}")
             df.to_csv("car_detail_url_list.csv", index = False)
+            browser.quit()
+            reload_browser = True
 
-        browser.quit()
-        time.sleep(3)
+        time.sleep(2)
 
+    browser.quit()
     df = pd.DataFrame(car_detail_url_list, columns = ["url"])
     df.to_csv("car_detail_url_list.csv", index=False)
     print(f"finished with {index} urls saved")
+    time.sleep(20)
     email_notification.send_email(f"got all {index} detail URLs")
 
 
-def scrape_car_detail(detail_url):
+def scrape_car_detail(detail_url, browser):
     df_detail = pd.DataFrame()
-    try:
-        browser = start_chrome(url=detail_url, headless=True)
-    except Exception:
-        time.sleep(60)
-        browser.quit()
-        browser = start_chrome(url=detail_url, headless=True)
-
     soup = bs(browser.page_source, "html.parser")
 
     def handle_exception(item, print_=False):
@@ -203,36 +205,68 @@ def scrape_car_detail(detail_url):
     except Exception:
         handle_exception("add_id-href")
 
-    browser.quit()
-    time.sleep(3)
-
     return df_detail
 
+def run_browser():
+    try:
+        browser = start_chrome("https://www.sauto.cz", headless=True)
+    except Exception:
+        time.sleep(60)
+        browser = start_chrome("https://www.sauto.cz", headless=True)
+    return browser
 
 def run_scrapping():
     # run through all pages and get all the URLs of add details, save to CSV
-    get_details_url(400)
+    get_details_url(500)
 
     directory = "car_update_data"
     csv_file_name = "car_list_all_v2_sauto_update.csv"
 
-    if os.path.exists(f"{directory}/{csv_file_name}"):
-        car_list_all_v2_sauto_update = pd.read_csv(f"{directory}/{csv_file_name}")
-        print("loading existing dataframe")
+    if os.path.exists(directory):
+        if os.path.exists(f"{directory}/{csv_file_name}"):
+            car_list_all_v2_sauto_update = pd.read_csv(f"{directory}/{csv_file_name}")
+            print("loading existing dataframe")
+        else:
+            car_list_all_v2_sauto_update = pd.DataFrame(columns=["car_brand", "car_model"])
+            print("creating new dataframe")
     else:
         os.makedirs(directory)
         car_list_all_v2_sauto_update = pd.DataFrame(columns=["car_brand", "car_model"])
-        print("creating new dataframe")
+        print("creating new dir and dataframe")
 
     car_detail_url_list = pd.read_csv("car_detail_url_list.csv")
+    car_detail_url_list.reset_index(drop=True)
+
+    browser = run_browser()
 
     for index, url in car_detail_url_list.iterrows():
-        detail_df = scrape_car_detail(url[0])
+        if (index + 1) % 100 == 0:
+            print("restarting browser...")
+            browser.quit()
+            time.sleep(5)
+            browser = run_browser()
+            time.sleep(3)
+
+        try:
+            browser.get(url[0])
+        except Exception:
+            if "crash" in str(Exception.with_traceback):
+                print("browser has crashed")
+            browser.quit()
+            browser = run_browser()
+            browser.get(url[0])
+            time.sleep(5)
+
+        detail_df = scrape_car_detail(url[0], browser)
         car_list_all_v2_sauto_update = car_list_all_v2_sauto_update.append(detail_df, sort=False)
         print(f"details added: {index + 1}", end="\r", flush=True)
-        if (index + 1) % 50 == 0:
+        time.sleep(1)
+        if (index + 1) % 100 == 0:
             car_list_all_v2_sauto_update.to_csv(f"{directory}/{csv_file_name}", index=False)
-            print("50 more details added, saving...")
+            print("100 more details added, saving...")
+
+    if (index + 1) % 1000 == 0:
+        email_notification.send_email(f"{index + 1} details done")
 
     car_list_all_v2_sauto_update.to_csv(f"{directory}/{csv_file_name}", index=False)
     email_notification.send_email(f"got all the {index + 1} details")
