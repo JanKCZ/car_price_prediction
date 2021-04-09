@@ -44,10 +44,9 @@
 	</header>
 	<main>
 	<center>
-		<h1 id="pred" style="color: green;">
-			{{pred_text}}<br>
-			{{pred_price}}
-		</h1>
+		<h1 id="pred_text" style="color: green;"> </h1>
+		<br>
+		<h1 id="pred_value" style="color: green;"> </h1>
 		<br>
 		<form>
 			<div class="row">
@@ -148,7 +147,7 @@
 	<!-- for TEST env only, comment-out before pushing to master -->
 	<!-- <button type="button" class="btn btn-primary btn-sm" onclick="set_test_values()">fill values</button> -->
 	<div class="login">
-    <form id="form" action="{{ url_for('predict')}}"method="POST" onsubmit="return checkParametres()">
+    <form id="form">
     	<input id = "car_brand_input" type = "hidden" name = "car_brand_input" value = "" />
     	<input id = "car_model_input" type = "hidden" name = "car_model_input" value = "" />
     	<input id = "car_type_input" type = "hidden" name = "car_type_input" value = "" />
@@ -162,7 +161,7 @@
     	<input id = "country_input" type = "hidden" name = "country_input" value = "" />
 		<input id = "engine_power_input" type = "hidden" name = "engine_power_input" value = "" />
 		<input id = "milage_input" type = "hidden" name = "milage_input" value = "" />
-		<button type="submit" class="btn btn-primary btn-lg" id="submitBtn" onclick="log_to_ga()"
+		<button type="button" class="btn btn-primary btn-lg" id="submitBtn"
 		style="background-color: rgb(14, 110, 143); border-color: rgb(14, 110, 143); width: 300px; font-size: 25px;">Odhadnout cenu</button>
 		<br><br>
     </form>
@@ -250,7 +249,7 @@
 		function log_to_ga() {
 			ga('send', 'event', 'test_pred_action', "test_prediction_value")
 			var predSpec = ""
-			data = passParametres()
+			var data = passParametres()
 			predSpec.concat(data[0], ";", data[1], ";", data[2], ";", data[3], ";", data[4], ";", data[5], ";", data[6], ";", 
 			data[7], ";", data[8], ";", data[9], ";", data[10], ";", data[11], ";", data[12])
 
@@ -284,5 +283,44 @@
 
 		//CAR TYPE
 		load_data_to_list("car_type_list", car_type_data, true);
+	</script>
+	<script>
+		var btn = document.getElementById("submitBtn")
+		btn.addEventListener("click", function() {
+			var data = passParametres()
+			json_data = {
+				0 : data[0],
+				1 : data[1],
+				2 : data[2],
+				3 : data[3],
+				4 : data[4],
+				5 : data[5],
+				6 : data[6],
+				7 : data[7],
+				8 : data[8],
+				9 : data[9],
+				10 : data[10],
+				11 : data[11],
+				12 : data[12]
+			}
+
+			$.ajax({
+        		type: "GET", 
+				url: "/predict",
+				dataType: "json",
+				async: false,
+				contentType: "application/json",
+				data: JSON.stringify(json_data), 
+
+			}).done(function ( data ) {
+				console.log("success");
+				console.log(data.responseText);
+			}).fail(function ( data ) {
+				console.log("fail");
+				console.log(data.responseText);
+				document.getElementById("pred_text").textContent = "Odhadovaná cena:",
+				document.getElementById("pred_value").textContent = data.responseText
+			});
+		})
 	</script>
 </html>

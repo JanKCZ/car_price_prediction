@@ -159,8 +159,6 @@ function passParametres() {
 	document.getElementById("country_input").value = country
 	param_list.push(country);
 
-	console.log(param_list.slice(0, 6));
-	console.log(param_list.slice(7, 12));
 	return param_list
 }
 

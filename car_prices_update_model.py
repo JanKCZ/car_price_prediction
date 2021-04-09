@@ -72,6 +72,7 @@ if yes_no("update model? [y/n]: "):
 
   
   not_nan = raw_data_updated[raw_data_updated.price_more_info.notnull()]
+  
   for word in tqdm(bad_words):
     bad_words_index = not_nan[not_nan.price_more_info.str.contains(word, case = False)].index
     for good in good_words:
