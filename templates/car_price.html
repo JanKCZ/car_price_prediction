@@ -44,9 +44,13 @@
 	</header>
 	<main>
 	<center>
-		<h1 id="pred_text" style="color: green;"> </h1>
-		<br>
-		<h1 id="pred_value" style="color: green;"> </h1>
+		<div>
+			<h1 id="pred_text" style="color: green;"> </h1>
+			<div class="spinner-border text-primary" role="status" id="spinner" style="visibility: hidden;">
+				<span class="visually-hidden">Loading...</span>
+			</div>
+			<h1 id="pred_value" style="color: green;"> </h1>
+		</div>
 		<br>
 		<form>
 			<div class="row">
@@ -285,42 +289,66 @@
 		load_data_to_list("car_type_list", car_type_data, true);
 	</script>
 	<script>
+		var loader = document.getElementById("spinner")
+		var prediction_text_element = document.getElementById("pred_text")
+		var prediction_value_element = document.getElementById("pred_value")
+
+		function add_spinner() {
+			if (prediction_text_element != null) {
+				prediction_text_element.style.visibility = "hidden"
+				prediction_value_element.style.visibility = "hidden"
+			}
+			loader.style.visibility = "visible"
+		}
+
+		function remove_spinner() {
+			loader.style.visibility = "hidden"
+			if (prediction_text_element != null) {
+				prediction_text_element.style.visibility = "visible"
+				prediction_value_element.style.visibility = "visible"
+			}
+		}
+
 		var btn = document.getElementById("submitBtn")
 		btn.addEventListener("click", function() {
-			var data = passParametres()
-			json_data = {
-				0 : data[0],
-				1 : data[1],
-				2 : data[2],
-				3 : data[3],
-				4 : data[4],
-				5 : data[5],
-				6 : data[6],
-				7 : data[7],
-				8 : data[8],
-				9 : data[9],
-				10 : data[10],
-				11 : data[11],
-				12 : data[12]
+			if (checkParametres() == true) {
+				add_spinner()
+				var data = passParametres()
+				json_data = {
+					0 : data[0],
+					1 : data[1],
+					2 : data[2],
+					3 : data[3],
+					4 : data[4],
+					5 : data[5],
+					6 : data[6],
+					7 : data[7],
+					8 : data[8],
+					9 : data[9],
+					10 : data[10],
+					11 : data[11],
+					12 : data[12]
+				}
+
+				$.ajax({
+					type: "GET", 
+					url: "/predict",
+					dataType: "json",
+					async: true,
+					contentType: "application/json",
+					data: JSON.stringify(json_data), 
+
+				}).done(function ( data ) {
+					console.log("success");
+					console.log(data.responseText);
+				}).fail(function ( data ) {
+					remove_spinner()
+					console.log("fail");
+					console.log(data.responseText);
+					document.getElementById("pred_text").textContent = "Odhadovaná cena:",
+					document.getElementById("pred_value").textContent = data.responseText
+				});
 			}
-
-			$.ajax({
-        		type: "GET", 
-				url: "/predict",
-				dataType: "json",
-				async: false,
-				contentType: "application/json",
-				data: JSON.stringify(json_data), 
-
-			}).done(function ( data ) {
-				console.log("success");
-				console.log(data.responseText);
-			}).fail(function ( data ) {
-				console.log("fail");
-				console.log(data.responseText);
-				document.getElementById("pred_text").textContent = "Odhadovaná cena:",
-				document.getElementById("pred_value").textContent = data.responseText
-			});
 		})
 	</script>
 </html>
