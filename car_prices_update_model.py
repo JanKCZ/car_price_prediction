@@ -65,41 +65,27 @@ if yes_no("update model? [y/n]: "):
   bad_words = [" vadný", " vadny", " vadné", " vadne", " rozbit", " havarovan", " poškozen", " poskozen", "špatn", "nepojízd", "nepojizdn", 
   " bourané", " bourane", " bouraný", " bourany", "koroze", "kosmetick", "dodělaní", "na náhradní díly", "na nahradni dily", "porucha", " porouchan", " KO!",
   "drobné závady", "zavady", "závad", "oděrky", "zreziv", "rezav", "přetržený", "pretrzeny", "praskl", "nenastartuje", "nenaskočí", "problém s", "netopi", "netopí", "nejede",
-  "zreziv", " vada"]
+  "zreziv", " vada", "po výměmě motoru"]
   good_words = ["bez poškození", "žádné poškození", "nemá poškození", "není poškozen", "bez koroze", 
   "žádné závady", "bez závad"]
   bad_index = []
 
-  
-  not_nan = raw_data_updated[raw_data_updated.price_more_info.notnull()]
-  
-  for word in tqdm(bad_words):
-    bad_words_index = not_nan[not_nan.price_more_info.str.contains(word, case = False)].index
-    for good in good_words:
-      if good not in bad_words_index:
-        for index in bad_words_index:
-          if index not in bad_index:
-            bad_index.append(index)
+  def clean_bad_words():
+    indexes_to_remove = []
+    for cat in ["price_more_info", "additional_info", "detail"]:
+        not_nan = raw_data_updated[raw_data_updated[cat].notnull()]
+        for bad in bad_words:
+            bad_words_index = not_nan[not_nan[cat].str.contains(bad, case = False)].index
+            not_bad = not_nan.loc[bad_words_index, :].copy()
+        for good in good_words:
+            good_and_bad_index = not_bad[not_bad[cat].str.contains(good, case = False)].index
+        for word in bad_words_index:
+            if word not in good_and_bad_index:
+                if word not in indexes_to_remove:
+                    indexes_to_remove.append(word)
+    return indexes_to_remove
             
-  not_nan = raw_data_updated[raw_data_updated.additional_info.notnull()]
-  for word in tqdm(bad_words):
-    bad_words_index = not_nan[not_nan.additional_info.str.contains(word, case = False)].index
-    for good in good_words:
-      if good not in bad_words_index:
-        for index in bad_words_index:
-          if index not in bad_index:
-            bad_index.append(index)
-
-  not_nan = raw_data_updated[raw_data_updated.detail.notnull()]
-  for word in tqdm(bad_words):
-    bad_words_index = not_nan[not_nan.detail.str.contains(word, case = False)].index
-    for good in good_words:
-      if good not in bad_words_index:
-        for index in bad_words_index:
-          if index not in bad_index:
-            bad_index.append(index)
-            
-  raw_data_updated = raw_data_updated.drop(bad_index)
+  raw_data_updated = raw_data_updated.drop(clean_bad_words())
 
   pd.set_option('display.max_colwidth', None)
   print("dropped adds with words: ", bad_words)
