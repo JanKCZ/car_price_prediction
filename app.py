@@ -10,6 +10,10 @@ app = Flask(__name__)
 def home():
 	return render_template("car_price.html")
 
+@app.route('/sitemap.xml', methods = ["GET"])
+def sitemap():
+	return render_template('sitemap.xml')
+
 @app.route("/predict", methods = ["GET"])
 def predict():
 	json_data = request.values
