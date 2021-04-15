@@ -62,10 +62,10 @@ if yes_no("update model? [y/n]: "):
   print("final raw data shape is {}".format(raw_data_updated.shape))
 
   #remove adds, which include words about damaged or non-functional cars
-  bad_words = [" vadný", " vadny", " vadné", " vadne", " rozbit", " havarovan", " poškozen", " poskozen", "špatn", "nepojízd", "nepojizdn", 
+  bad_words = [" vada", "vadný", "vadny", "vadné", "vadne", "vadná", " rozbit", " havarovan", " poškozen", " poskozen", "špatn", "nepojízd", "nepojizdn", 
   " bourané", " bourane", " bouraný", " bourany", "koroze", "kosmetick", "dodělaní", "na náhradní díly", "na nahradni dily", "porucha", " porouchan", " KO!",
   "drobné závady", "zavady", "závad", "oděrky", "zreziv", "rezav", "přetržený", "pretrzeny", "praskl", "nenastartuje", "nenaskočí", "problém s", "netopi", "netopí", "nejede",
-  "zreziv", " vada", "po výměmě motoru"]
+  "zreziv", " vada", "po výměmě motoru", "odřeniny", "promacknut", "promáčknut"]
   good_words = ["bez poškození", "žádné poškození", "nemá poškození", "není poškozen", "bez koroze", 
   "žádné závady", "bez závad"]
   bad_index = []

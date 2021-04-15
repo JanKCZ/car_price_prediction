@@ -12,7 +12,7 @@ var country_data = ['Česká republika', 'Německo', 'Belgie', 'Švýcarsko',
 	       'Francie', 'Lucembursko', 'USA', 'Dánsko', 'Španělsko', 'Jiná',
 	       'Nedohledatelný původ'];
 
-var car_type_data = ['hatchback', 'sedan/limuzína', 'MPV', 'liftback', 'SUV', 'kombi',
+var car_type_data = ['hatchback', 'kombi', 'SUV', 'MPV', 'sedan/limuzína', 'liftback',
 	       'kupé', 'VAN', 'pick-up', 'kabriolet', 'terénní', 'CUV',
 	       'roadster'];
 

@@ -69,17 +69,17 @@
 				<select 
 							class="form-select form-select-lg mb-3" id="condition" style="width:300px; height: 48px;">
 							<option disabled selected value >stav vozu</option>
-							<option value="nové">Nové</option>
-							<option value="předváděcí">Předváděcí</option>
-							<option value="ojeté">Ojeté</option>
+							<option value="nové">nové</option>
+							<option value="předváděcí">předváděcí</option>
+							<option value="ojeté">ojeté</option>
 				</select>
 				</div>
 				<div class="col-sm">
 				<select 
 							class="form-select form-select-lg mb-3" id="book" style="width:300px; height: 48px;">
 							<option disabled selected value >servisní knížka</option>
-							<option value="ano">Ano</option>
-							<option value="ne">Ne</option>
+							<option value="ano">ano</option>
+							<option value="ne">ne</option>
 				</select>
 				</div>
 				<div class="col-sm">
@@ -252,15 +252,15 @@
 			display_car_models(car_brand);
 		})
 
-		function log_to_ga() {
-			ga('send', 'event', 'test_pred_action', "test_prediction_value")
-			var predSpec = ""
-			var data = passParametres()
-			predSpec.concat(data[0], ";", data[1], ";", data[2], ";", data[3], ";", data[4], ";", data[5], ";", data[6], ";", 
-			data[7], ";", data[8], ";", data[9], ";", data[10], ";", data[11], ";", data[12])
+		// function log_to_ga() {
+		// 	ga('send', 'event', 'test_pred_action', "test_prediction_value")
+		// 	var predSpec = ""
+		// 	var data = passParametres()
+		// 	predSpec.concat(data[0], ";", data[1], ";", data[2], ";", data[3], ";", data[4], ";", data[5], ";", data[6], ";", 
+		// 	data[7], ";", data[8], ";", data[9], ";", data[10], ";", data[11], ";", data[12])
 
-			ga('send', 'event', 'Prediction', predSpec)
-		}
+		// 	ga('send', 'event', 'Prediction', predSpec)
+		// }
 
 		add_listeners_color("condition");
 		add_listeners_color("car_model_list");
@@ -294,6 +294,13 @@
 		var loader = document.getElementById("spinner")
 		var prediction_text_element = document.getElementById("pred_text")
 		var prediction_value_element = document.getElementById("pred_value")
+
+		function log_ga(data) {
+			gtag('event', 'prediction', {
+			'brand': data[0],
+			'model': data[1]
+			});
+		}
 
 		function add_spinner() {
 			if (prediction_text_element != null) {
@@ -331,6 +338,8 @@
 					11 : data[11],
 					12 : data[12]
 				}
+
+				log_ga(data)
 
 				$.ajax({
 					type: "GET", 
