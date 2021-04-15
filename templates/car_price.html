@@ -296,9 +296,20 @@
 		var prediction_value_element = document.getElementById("pred_value")
 
 		function log_ga(data) {
-			gtag('event', 'prediction', {
-			'brand': data[0],
-			'model': data[1]
+			gtag('event', 'select_item', {
+			items: [{
+				item_id: data[0],
+				item_category: data[1],
+				item_name: data[2]
+				// coupon: 'SUMMER_FUN',
+				// discount: 2.22,
+				// index: 5,
+				// item_list_name: 'Related Products',
+				// item_list_id: 'related_products',
+				// affiliation: 'Google Store',
+				// item_brand: 'Gucci',
+				// item_variant: 'black',
+			}]
 			});
 		}
 
