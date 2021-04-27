@@ -123,3 +123,9 @@
 2021-04-15 13:30:36.094505  average error:   13.66%, median error:    9.40%, absolute error:   91870, score:   0.948, max error:  194.33%, set size: 107665.0, lib: scikit
 2021-04-15 13:40:25.145754  average error:   13.65%, median error:    8.90%, absolute error:   81237, score:   0.959, max error:  122.24%, set size: 107640.0, lib: scikit
 2021-04-15 13:48:09.372289  average error:   11.49%, median error:    8.08%, absolute error:   84429, score:   0.955, max error:   72.11%, set size: 107660.0, lib: scikit
+2021-04-23 13:57:23.142188  average error:   14.87%, median error:    8.81%, absolute error:   76357, score:   0.966, max error:  421.95%, set size: 114665.0, lib: scikit
+2021-04-23 14:08:19.212587  average error:   14.87%, median error:    8.81%, absolute error:   76357, score:   0.966, max error:  421.95%, set size: 114665.0, lib: scikit
+2021-04-23 14:20:29.224936  average error:   14.87%, median error:    8.81%, absolute error:   76357, score:   0.966, max error:  421.95%, set size: 114665.0, lib: scikit
+2021-04-23 17:45:52.050337  average error:   14.87%, median error:    8.81%, absolute error:   76357, score:   0.966, max error:  421.95%, set size: 114665.0, lib: scikit
+2021-04-27 15:13:18.357780  average error:   12.04%, median error:    8.90%, absolute error:   80962, score:   0.959, max error:   82.31%, set size: 110805.0, lib: scikit
+2021-04-27 15:43:14.802729  average error:   12.04%, median error:    8.90%, absolute error:   80962, score:   0.959, max error:   82.31%, set size: 110805.0, lib: scikit

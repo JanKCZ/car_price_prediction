@@ -1,7 +1,7 @@
 import smtplib, ssl
 from email.mime.text import MIMEText
 
-def send_email(message="task completed"):
+def send_email(message="task completed", receiver_email = "jan.kolnik@gmail.com"):
   port = 465
   context = ssl.create_default_context()
 
@@ -9,7 +9,6 @@ def send_email(message="task completed"):
   password = "seNvig-5hozke-kodraw"
 
   sender_email = "jandevacc@gmail.com"
-  receiver_email = "jan.kolnik@gmail.com"
 
   msg = MIMEText(message, "plain")
   msg["Subject"] = "Task status"

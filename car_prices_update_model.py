@@ -20,6 +20,7 @@ import joblib
 from datetime import datetime
 import sys
 from tqdm import tqdm
+import re
 
 # FILE IMPORT
 from car_prediction_pytorch_model import *
@@ -65,27 +66,33 @@ if yes_no("update model? [y/n]: "):
   bad_words = [" vada", "vadný", "vadny", "vadné", "vadne", "vadná", " rozbit", " havarovan", " poškozen", " poskozen", "špatn", "nepojízd", "nepojizdn", 
   " bourané", " bourane", " bouraný", " bourany", "koroze", "kosmetick", "dodělaní", "na náhradní díly", "na nahradni dily", "porucha", " porouchan", " KO!",
   "drobné závady", "zavady", "závad", "oděrky", "zreziv", "rezav", "přetržený", "pretrzeny", "praskl", "nenastartuje", "nenaskočí", "problém s", "netopi", "netopí", "nejede",
-  "zreziv", " vada", "po výměmě motoru", "odřeniny", "promacknut", "promáčknut"]
+  "zreziv", " vada", "po výměmě motoru", "odřeniny", "promacknut", "promáčknut", "neřadí"]
   good_words = ["bez poškození", "žádné poškození", "nemá poškození", "není poškozen", "bez koroze", 
   "žádné závady", "bez závad"]
-  bad_index = []
 
   def clean_bad_words():
-    indexes_to_remove = []
-    for cat in ["price_more_info", "additional_info", "detail"]:
-        not_nan = raw_data_updated[raw_data_updated[cat].notnull()]
-        for bad in bad_words:
-            bad_words_index = not_nan[not_nan[cat].str.contains(bad, case = False)].index
-            not_bad = not_nan.loc[bad_words_index, :].copy()
-        for good in good_words:
-            good_and_bad_index = not_bad[not_bad[cat].str.contains(good, case = False)].index
-        for word in bad_words_index:
-            if word not in good_and_bad_index:
-                if word not in indexes_to_remove:
-                    indexes_to_remove.append(word)
-    return indexes_to_remove
+      def replace(old, new, full_text):
+        return re.sub(re.escape(old), new, full_text, flags=re.IGNORECASE)
+
+      indexes_to_remove = []
+
+      for cat in tqdm(["price_more_info", "additional_info", "detail"]):
+          not_nan = raw_data_updated[raw_data_updated[cat].notnull()]
+
+          for good in good_words:
+              not_nan[cat] = not_nan[cat].apply(lambda x: replace(good, "", x))
+          
+          for bad in bad_words:
+              bad_words_idx = not_nan[not_nan[cat].str.contains(bad, case = False)].index
+
+              for i in bad_words_idx:
+                  if i not in indexes_to_remove:
+                      indexes_to_remove.append(i)
+
+      return indexes_to_remove
             
-  raw_data_updated = raw_data_updated.drop(clean_bad_words())
+  index_to_drop = clean_bad_words()
+  raw_data_updated = raw_data_updated.drop(index=index_to_drop, axis=0)
 
   pd.set_option('display.max_colwidth', None)
   print("dropped adds with words: ", bad_words)
@@ -279,7 +286,7 @@ if use_scikit:
   model = MLPRegressor(solver="adam", alpha=0.001, learning_rate_init=0.005,
                         hidden_layer_sizes=(16, 536), random_state=42,
                         batch_size= 32, verbose = True, max_iter = 300,
-                        learning_rate = 'adaptive', warm_start=True,
+                        learning_rate = 'adaptive', warm_start=False,
                         validation_fraction = 0.1, early_stopping = True, activation="relu")
   
   model.fit(X_train_final, y_train.values)
