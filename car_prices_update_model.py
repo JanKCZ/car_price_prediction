@@ -5,9 +5,6 @@
 # ### process new data from .csv file and output updated model, with predict and score methods
 
 # MODULE IMPORT
-import pandas as pd
-import numpy as np
-import copy
 from sklearn.preprocessing import OneHotEncoder, RobustScaler
 from sklearn.pipeline import make_pipeline, Pipeline
 from sklearn.model_selection import train_test_split
@@ -20,6 +17,8 @@ import re
 from car_prediction_pytorch_model import *
 from test_prediction_result import *
 from car_prediction_scikit_model import *
+
+data_source_path = "/Users/jankolnik/Desktop/ML_projects/car_price_data/"
 
 def yes_no(answer):
   user_input = input(answer)
@@ -37,9 +36,9 @@ default = False
 
 if yes_no("update model? [y/n]: "):
   print("loading CSV file....")
-  raw_data = pd.read_csv('/Users/jankolnik/Downloads/car_list_all_v1_updated_sauto.csv')
+  raw_data = pd.read_csv(f'{data_source_path}car_list_all_v1_updated_sauto.csv')
 
-  raw_data_update = pd.read_csv("/Users/jankolnik/Downloads/car_list_all_v2_sauto_update.csv")
+  raw_data_update = pd.read_csv(f"{data_source_path}car_list_all_v2_sauto_update.csv")
 
   raw_data_updated = pd.concat([raw_data, raw_data_update])
   
@@ -50,7 +49,7 @@ if yes_no("update model? [y/n]: "):
   # raw_data = raw_data.reset_index(drop=True)
 
   #save to CSV
-  raw_data_updated.to_csv('/Users/jankolnik/Downloads/car_list_all_v1_updated_sauto.csv', index = False, header=True)
+  raw_data_updated.to_csv(f'{data_source_path}car_list_all_v1_updated_sauto.csv', index = False, header=True)
 
   print("{} shape before update".format(raw_data.shape[0]))
   # print("added {} rows of raw data".format(raw_data_update.shape[0]))
@@ -167,14 +166,14 @@ if yes_no("update model? [y/n]: "):
   data_frame_training_ready = data_frame_no_neuvedeno.copy()
 
   print("saving to CSV, preprocessed, shape: ", data_frame_training_ready.shape)
-  data_frame_training_ready.to_csv ('/Users/jankolnik/Downloads/car_list_sauto_preprocessed_2.csv', index = False, header=True)
+  data_frame_training_ready.to_csv (f'{data_source_path}car_list_sauto_preprocessed_2.csv', index = False, header=True)
 
 drop_nan = True               # use KNN imputer to impute num and cat values
 drop_year = 2000
 is_sparse = False
 drop_wrong_power_ccm_combination = True
 
-data_frame_training_ready = pd.read_csv('/Users/jankolnik/Downloads/car_list_sauto_preprocessed_2.csv')
+data_frame_training_ready = pd.read_csv(f'{data_source_path}car_list_sauto_preprocessed_2.csv')
 
 print("size of fresh CSV: ", data_frame_training_ready)
 

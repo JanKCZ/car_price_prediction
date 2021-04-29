@@ -40,7 +40,7 @@ def get_car(prediction, data_source):
 
 
 
-with open('/Users/jankolnik/Downloads/car_list_sauto_preprocessed_2.csv', mode="r") as file:
+with open('/Users/jankolnik/Desktop/ML_projects/car_price_data/car_list_sauto_preprocessed_2.csv', mode="r") as file:
     data = csv.DictReader(file)
 
     raw_data = (line for line in data)
