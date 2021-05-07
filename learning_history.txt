@@ -130,3 +130,4 @@
 2021-04-27 15:13:18.357780  average error:   12.04%, median error:    8.90%, absolute error:   80962, score:   0.959, max error:   82.31%, set size: 110805.0, lib: scikit
 2021-04-27 15:43:14.802729  average error:   12.04%, median error:    8.90%, absolute error:   80962, score:   0.959, max error:   82.31%, set size: 110805.0, lib: scikit
 2021-04-29 13:29:28.596958  average error:   10.83%, median error:    8.47%, absolute error:   74302, score:   0.966, max error:   72.34%, set size: 115930.0, lib: scikit
+2021-05-07 13:56:37.833609  average error:   11.83%, median error:    8.40%, absolute error:   84431, score:   0.957, max error:  123.45%, set size: 121160.0, lib: scikit
